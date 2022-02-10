@@ -3,18 +3,15 @@ import React, { useState } from "react"
 import { Nav, Navbar, Container, Button, Form } from "react-bootstrap"
 import { Link } from "react-router-dom"
 import { useUserContext } from '../auth/userContext'
-import {useNavigate} from "react-router-dom"
 
 export default function AppNavbar({authLevel}) {
 
-  const navigate = useNavigate()
   const {logout} = useUserContext()
   const [error, setError] = useState("")
 
   async function handleLogout() {
     setError("")
     await logout()
-    navigate("/signup")
   }
 
   return (

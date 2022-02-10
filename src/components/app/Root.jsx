@@ -32,7 +32,7 @@ const MatchesPagePlaceholder = () => <p>Matches</p>
 
 
 export default function AppRoot() {
-  const { loading, authLevel, user } = useAuthLevel()
+  const { loading, user, profile } = useAuthLevel()
 
   if (loading)
     return (
@@ -43,13 +43,13 @@ export default function AppRoot() {
 
   const uid = user?.uid
 
+  const authLevel = user ? (profile ? 2 : 1) : 0
+
   const renderProtection = (targetLevel) => (
     <Protected authLevel={authLevel} targetLevel={targetLevel}>
       <Outlet />
     </Protected>
   )
-
-  console.log(loading, authLevel, user)
 
   return (
     <>

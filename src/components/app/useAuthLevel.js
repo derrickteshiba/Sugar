@@ -3,28 +3,35 @@ import { getAuth, onAuthStateChanged } from "firebase/auth"
 import { getDatabase, ref as dbRef, onValue } from "firebase/database"
 const db = getDatabase()
 
+const initialState = {
+  user: null,
+  profile: null,
+  loading: true
+}
+
 export default function useAuthLevel() {
-  const [user, setUser] = useState(null)
-  const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [authState, setAuthState] = useState(initialState)
 
   useEffect(() => {
     return onAuthStateChanged(getAuth(), async (user) => {
-      if (!user) setLoading(false)
-      else setUser(user)
+      if (!user)
+        setAuthState({
+          user: null,
+          profile: null,
+          loading: false
+        })
+
+      const userRef = dbRef(db, "user/" + user.uid)
+
+      return onValue(userRef, (snap) => {
+        setAuthState({
+          user,
+          profile: snap.val(),
+          loading: false
+        })
+      })
     })
   }, [])
 
-  useEffect(() => {
-    if (!user) return
-    const userRef = dbRef(db, "user/" + user.uid)
-    return onValue(userRef, (snap) => {
-      setProfile(snap.val())
-
-      if (loading) setLoading(false)
-    })
-    
-  }, [user])
-
-  return { loading, authLevel: user ? (profile ? 2 : 1) : 0, user, profile }
+  return authState
 }

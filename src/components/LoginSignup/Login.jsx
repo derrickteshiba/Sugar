@@ -26,8 +26,8 @@ export default function Login() {
         }
         catch{
             setError("Couldn't Login")
+            setLoading(false)
         }
-        setLoading(false)
     }
 
 const forgotPasswordHandler = () => {
