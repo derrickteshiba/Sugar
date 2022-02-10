@@ -9,8 +9,7 @@ export default function useAuthLevel() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    return onAuthStateChanged(getAuth(), async () => {
-      const user = getAuth()?.currentUser
+    return onAuthStateChanged(getAuth(), async (user) => {
       if (!user) setLoading(false)
       else setUser(user)
     })

@@ -11,7 +11,6 @@ const db = getDatabase()
 const storage = getStorage()
 
 export default function EditProfileCard({ uid }) {
-  const userRef = dbRef(db, "user/" + uid)
   const picRef = storageRef(storage, "profilePic/" + uid)
 
   const [profile, setProfile] = useState({
@@ -20,6 +19,8 @@ export default function EditProfileCard({ uid }) {
   })
 
   useEffect(() => {
+    const userRef = dbRef(db, "user/" + uid)
+
     return get(userRef).then((snap) => {
       setProfile({
         data: {
@@ -32,13 +33,12 @@ export default function EditProfileCard({ uid }) {
         loading: false
       })
     })
-  }, [uid, userRef])
+  }, [uid])
 
   const [toastText, setToastText] = useState(null)
 
   const onSubmit = async ({ pfp, ...newProfile }) => {
-    console.log(newProfile)
-    const updates = [set(userRef, newProfile)]
+    const updates = [set(dbRef(db, "user/" + uid), newProfile)]
     if (pfp.file) updates.push(uploadBytes(picRef, pfp.file))
 
     await Promise.all(updates)

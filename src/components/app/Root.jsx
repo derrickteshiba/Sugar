@@ -43,6 +43,8 @@ export default function AppRoot() {
     </Protected>
   )
 
+  console.log(loading, authLevel, user)
+
   return (
     <>
       <AppNavbar authLevel={authLevel} />
