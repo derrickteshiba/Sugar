@@ -1,7 +1,6 @@
-import React from 'react'
+import "./firebase"
 
+import ProfileCard from './components/profile/ProfileCard'
 export default function App() {
-  return (
-    <div>App</div>
-  )
+  return <ProfileCard userId='3'/>
 }
