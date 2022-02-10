@@ -10,7 +10,6 @@ const UserContext = createContext({})
 
 export function useUserContext()
 {
-    console.log("sup")
     return useContext(UserContext)
 }
 
@@ -29,7 +28,6 @@ export function UserContextProvider({children}){
     }
 
     function logout() {
-        console.log("cool")
        return signOut(auth)
     }
 
