@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react"
 import { Card } from "react-bootstrap"
 import EditProfileForm from "./EditProfileForm"
 import { getProfilePicUrl } from "../../utils/storage"
-import SuccessToast from '../SuccessToast'
+import SuccessToast from "../SuccessToast"
+import Center from '../Center'
 
 const db = getDatabase()
 const storage = getStorage()
 
-export default function EditProfileCard({uid}) {
+export default function EditProfileCard({ uid }) {
   const userRef = dbRef(db, "user/" + uid)
   const picRef = storageRef(storage, "profilePic/" + uid)
 
@@ -31,7 +32,7 @@ export default function EditProfileCard({uid}) {
         loading: false
       })
     })
-  }, [])
+  }, [uid, userRef])
 
   const [toastText, setToastText] = useState(null)
 
@@ -48,7 +49,7 @@ export default function EditProfileCard({uid}) {
   if (profile.loading) return null
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 align-items-center">
+    <Center>
       <Card style={{ minWidth: 600 }}>
         <Card.Header>
           <Card.Title className="mb-0">Your Public Profile</Card.Title>
@@ -67,6 +68,6 @@ export default function EditProfileCard({uid}) {
       >
         {toastText}
       </SuccessToast>
-    </div>
+    </Center>
   )
 }

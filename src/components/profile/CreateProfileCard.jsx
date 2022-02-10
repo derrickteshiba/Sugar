@@ -2,21 +2,24 @@ import { getDatabase, ref as dbRef, set } from "firebase/database"
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage"
 import React from "react"
 import { Card } from "react-bootstrap"
+import {useNavigate} from 'react-router-dom'
 import EditProfileForm from "./EditProfileForm"
 
 const db = getDatabase()
 const storage = getStorage()
 
-
 export default function CreateProfileCard({ uid }) {
   const userRef = dbRef(db, "user/" + uid)
   const picRef = storageRef(storage, "profilePic/" + uid)
+  const navigate = useNavigate()
 
   const onSubmit = async ({ pfp, ...newProfile }) => {
     const setProfile = set(userRef, newProfile)
     const storePfp = uploadBytes(picRef, pfp.file)
 
     await Promise.all([setProfile, storePfp])
+
+    navigate('/search')
   }
 
   return (
