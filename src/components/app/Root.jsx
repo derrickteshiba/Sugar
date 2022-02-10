@@ -9,10 +9,16 @@ import Center from "../Center"
 import Protected from "../auth/Protected"
 import AppNavbar from "../app/Navbar"
 import useAuthLevel from "../app/useAuthLevel"
+import Login from "../LoginSignup/Login"
+import Signup from "../LoginSignup/Signup"
+
+
+const SignupPagePlaceholder = () => <Signup />
+// TODO
 
 // TODO
-const LoginPagePlaceholder = () => <p>Login</p>
-// TODO
+const LoginPagePlaceholder = () => <Login />
+
 const SearchPagePlaceholder = () => <p>Search</p>
 // TODO
 const MatchesPagePlaceholder = () => <p>Matches</p>
@@ -51,6 +57,7 @@ export default function AppRoot() {
       <Routes>
         <Route exact path="*" element={renderProtection(-1)} />
         <Route element={renderProtection(0)}>
+          <Route exact path="/signup" element={<SignupPagePlaceholder />} />
           <Route exact path="/login" element={<LoginPagePlaceholder />} />
         </Route>
         <Route element={renderProtection(1)}>
@@ -63,6 +70,7 @@ export default function AppRoot() {
         <Route element={renderProtection(2)}>
           <Route exact path="/search" element={<SearchPagePlaceholder />} />
           <Route exact path="/matches" element={<MatchesPagePlaceholder />} />
+          
           <Route
             exact
             path="/profile"
