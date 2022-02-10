@@ -1,22 +1,14 @@
 import React, { useRef, useState } from "react"
 import { Button, Image, Spinner } from "react-bootstrap"
-import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage"
 
-const storage = getStorage()
-export default function EditProfilePicture({ userId }) {
+export default function EditProfilePicture({ src, onUpload, uploadText }) {
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef()
-
-  const urlPrefix = `https://firebasestorage.googleapis.com/v0/b/sugar-4e94c.appspot.com/o/profilePic%2F${userId}?alt=media`
-  const [src, setSrc] = useState(urlPrefix)
-
-  const onFileChange = (file) => {
+  
+  const onFileChange = async (file) => {
     setUploading(true)
-    const picRef = storageRef(storage, "profilePic/" + userId)
-
-    uploadBytes(picRef, file)
-      .then(() => setSrc(`${urlPrefix}&t=${new Date().getTime()}`))
-      .finally(() => setUploading(false))
+    await onUpload(file)
+    setUploading(false)
   }
 
   return (
@@ -51,7 +43,7 @@ export default function EditProfilePicture({ userId }) {
             Uploading{" "}
           </>
         ) : (
-          "Upload new photo"
+          uploadText
         )}
       </Button>
     </div>

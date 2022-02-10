@@ -1,6 +1,6 @@
 import "./firebase"
 
-import ProfileCard from './components/profile/ProfileCard'
+import CreateProfileCard from "./components/profile/CreateProfileCard"
 export default function App() {
-  return <ProfileCard userId='3'/>
+  return <CreateProfileCard userId='3'/>
 }

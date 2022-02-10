@@ -1,19 +1,8 @@
-import React, {  useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import { getDatabase, ref as dbRef, onValue, set } from "firebase/database"
-import { Form, Button,  } from "react-bootstrap"
+import React from "react"
+import { useForm, Controller } from "react-hook-form"
+import { Form, Button} from "react-bootstrap"
 import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
-import SuccessToast from "../SuccessToast"
-import ProfileFormFields from './ProfileFormFields'
-
-const db = getDatabase()
-
-const initialValues = {
-  name: "",
-  bio: "",
-  status: ""
-}
 
 const profileSchema = yup.object({
   name: yup.string().required(),
@@ -21,41 +10,67 @@ const profileSchema = yup.object({
   bio: yup.string()
 })
 
-export default function EditProfileForm({ userId }) {
-  const [loading, setLoading] = useState(true)
-  const [isOpen, setIsOpen] = useState(false)
-
-  const userRef = dbRef(db, "users/" + userId)
-
-  const { handleSubmit, control, reset, formState: {isSubmitting} } = useForm({
-    defaultValues: initialValues,
+export default function EditProfileForm({ defaultValues, onSubmit, buttonText }) {
+  const { handleSubmit, control, formState: {isSubmitting} } = useForm({
+    defaultValues,
     resolver: yupResolver(profileSchema)
   })
 
-  useEffect(() => {
-    onValue(userRef, (snapshot) => {
-      if (!loading) return
-      const data = snapshot.val()
-
-      reset(data)
-      setLoading(false)
-    })
-  }, [])
-
-  const onSubmit = async (newProfile) => {
-    await set(dbRef(db, "users/" + userId), newProfile)
-    setIsOpen(true)
-  }
-
-  if (loading) return null
-  
   return (
     <>
-      <SuccessToast isOpen={isOpen} onClose={() => setIsOpen(false)} />
       <Form noValidate onSubmit={handleSubmit(onSubmit)}>
-        <ProfileFormFields control={control} />
+      <Controller
+        control={control}
+        name="name"
+        render={({ field, fieldState }) => (
+          <Form.Group className="mb-3">
+            <Form.Label>Full Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Your name"
+              {...field}
+              noValidate
+            />
+            {fieldState.error?.message && (
+              <Form.Text>{fieldState.error?.message}</Form.Text>
+            )}
+          </Form.Group>
+        )}
+      />
+      <Controller
+        control={control}
+        name="status"
+        render={({ field, fieldState }) => (
+          <Form.Group className="mb-3">
+            <Form.Label>Status</Form.Label>
+            <Form.Select {...field}>
+              <option value=""></option>
+              <option value="moma">Sugar Moma</option>
+              <option value="papa">Sugar Papa</option>
+              <option value="boy">Baby boy</option>
+              <option value="girl">Baby girl</option>
+            </Form.Select>
+            {fieldState.error?.message && (
+              <Form.Text>{fieldState.error?.message}</Form.Text>
+            )}
+          </Form.Group>
+        )}
+      />
+      <Controller
+        control={control}
+        name="bio"
+        render={({ field, fieldState }) => (
+          <Form.Group className="mb-3">
+            <Form.Label>Bio</Form.Label>
+            <Form.Control as="textarea" placeholder="About me..." {...field} />
+            {fieldState.error?.message && (
+              <Form.Text>{fieldState.error?.message}</Form.Text>
+            )}
+          </Form.Group>
+        )}
+      />
         <Button variant="primary" type="submit" disabled={isSubmitting}>
-          Save Changes
+          {buttonText}
         </Button>
       </Form>
     </>
