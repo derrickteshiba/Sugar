@@ -1,35 +1,32 @@
-import React, { useRef, useState } from "react"
-import { Card, Button, Form, Alert } from "react-bootstrap"
-import { useUserContext } from "../auth/userContext"
-import { Link } from "react-router-dom"
+import React, { useRef, useState } from "react";
+import { Card, Button, Form, Alert } from "react-bootstrap";
+import { useUserContext } from "../auth/userContext";
+import { Link } from "react-router-dom";
 
 export default function Signup() {
-  const refEmail = useRef()
-  const refPass = useRef()
-  const refConfPass = useRef()
+  const refEmail = useRef();
+  const refPass = useRef();
+  const refConfPass = useRef();
 
-  const { signup } = useUserContext()
-  const [error, setError] = useState("")
-  const [loading, setLoading] = useState()
+  const { signup } = useUserContext();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState();
 
   function handleSubmit(e) {
-    e.preventDefault()
-    const email = refEmail.current.value
-    const password = refPass.current.value
-    const confpassword = refConfPass.current.value
+    e.preventDefault();
 
     if (refPass.current.value !== refConfPass.current.value) {
-      return setError("Passwords aren't the same")
+      return setError("Passwords aren't the same");
     }
 
     try {
-      setError("")
-      setLoading(true)
-      signup(refEmail.current.value, refPass.current.value)
+      setError("");
+      setLoading(true);
+      signup(refEmail.current.value, refPass.current.value);
     } catch {
-      setError("Couldn't make account")
+      setError("Couldn't make account");
     }
-    setLoading(false)
+    setLoading(false);
   }
   return (
     <>
@@ -79,5 +76,5 @@ export default function Signup() {
         Already have an account? <Link to="/login">Log In!</Link>
       </div>
     </>
-  )
+  );
 }

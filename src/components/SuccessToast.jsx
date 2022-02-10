@@ -1,5 +1,5 @@
-import React from "react"
-import { Toast, ToastContainer } from "react-bootstrap"
+import React from "react";
+import { Toast, ToastContainer } from "react-bootstrap";
 
 export default function SuccessToast({ isOpen, onClose, children }) {
   return (
@@ -16,5 +16,5 @@ export default function SuccessToast({ isOpen, onClose, children }) {
         </Toast.Header>
       </Toast>
     </ToastContainer>
-  )
+  );
 }

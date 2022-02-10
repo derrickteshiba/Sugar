@@ -1,22 +1,22 @@
-import React, { useRef } from "react"
-import { useForm, Controller } from "react-hook-form"
-import { Form, Button, Image } from "react-bootstrap"
-import * as yup from "yup"
-import { yupResolver } from "@hookform/resolvers/yup"
+import React, { useRef } from "react";
+import { useForm, Controller } from "react-hook-form";
+import { Form, Button, Image } from "react-bootstrap";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const initialValues = {
   name: "",
   status: "",
-  bio: ""
-}
+  bio: "",
+};
 
 export default function EditProfileForm({
   defaultValues = {},
   onSubmit,
   buttonText,
-  pfpRequired
+  pfpRequired,
 }) {
-  const fileInputRef = useRef()
+  const fileInputRef = useRef();
 
   const profileSchema = yup.object({
     name: yup.string().required("name is required"),
@@ -26,35 +26,38 @@ export default function EditProfileForm({
       file: pfpRequired
         ? yup.mixed().required("profile picture is required")
         : yup.mixed(),
-      src: yup.string()
-    })
-  })
+      src: yup.string(),
+    }),
+  });
 
   const {
     handleSubmit,
     setValue,
     control,
-    formState: { isSubmitting }
+    formState: { isSubmitting },
   } = useForm({
     defaultValues: {
       ...initialValues,
-      ...defaultValues
+      ...defaultValues,
     },
-    resolver: yupResolver(profileSchema)
-  })
+    resolver: yupResolver(profileSchema),
+  });
 
   return (
     <>
-      <Form noValidate onSubmit={handleSubmit(async (input) => {
-        await onSubmit(input)
-        setValue('pfp.file', null)
-      })}>
+      <Form
+        noValidate
+        onSubmit={handleSubmit(async (input) => {
+          await onSubmit(input);
+          setValue("pfp.file", null);
+        })}
+      >
         <Controller
           control={control}
           name="pfp"
           render={({ field, fieldState }) => {
             const message = Object.entries(fieldState.error ?? {})?.[0]?.[1]
-              .message
+              .message;
 
             return (
               <div className="d-flex align-items-center flex-column">
@@ -72,11 +75,11 @@ export default function EditProfileForm({
                   hidden
                   type="file"
                   onChange={(e) => {
-                    const file = e.target.files[0]
+                    const file = e.target.files[0];
                     field.onChange({
                       file,
-                      src: URL.createObjectURL(file)
-                    })
+                      src: URL.createObjectURL(file),
+                    });
                   }}
                   ref={fileInputRef}
                 />
@@ -89,7 +92,7 @@ export default function EditProfileForm({
                 </Button>
                 {message && <Form.Text>{message}</Form.Text>}
               </div>
-            )
+            );
           }}
         />
         <Controller
@@ -146,5 +149,5 @@ export default function EditProfileForm({
         </Button>
       </Form>
     </>
-  )
+  );
 }

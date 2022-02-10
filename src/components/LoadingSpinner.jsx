@@ -1,5 +1,5 @@
-import React from "react"
-import { Spinner } from "react-bootstrap"
+import React from "react";
+import { Spinner } from "react-bootstrap";
 
 export default function LoadingSpinner() {
   return (
@@ -11,5 +11,5 @@ export default function LoadingSpinner() {
       role="status"
       aria-hidden="true"
     />
-  )
+  );
 }

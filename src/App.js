@@ -1,10 +1,8 @@
-import "./firebase"
+import "./firebase";
 
-import {
-  BrowserRouter as Router,
-} from "react-router-dom"
+import { BrowserRouter as Router } from "react-router-dom";
 
-import AppRoot from './components/app/Root'
+import AppRoot from "./components/app/Root";
 
 export default function App() {
   return (
@@ -13,5 +11,5 @@ export default function App() {
         <AppRoot />
       </div>
     </Router>
-  )
+  );
 }
