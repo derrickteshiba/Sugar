@@ -3,10 +3,8 @@ import "./firebase"
 import {
   BrowserRouter as Router,
 } from "react-router-dom"
-import {signInWithEmailAndPassword, getAuth} from 'firebase/auth'
 
 import AppRoot from './components/app/Root'
-import EditProfileCard from './components/profile/EditProfileCard'
 
 export default function App() {
 
@@ -18,5 +16,3 @@ export default function App() {
     </Router>
   )
 }
-
-signInWithEmailAndPassword(getAuth(), 'test@gmail.com', 'test123')
