@@ -3,17 +3,13 @@ import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import React from "react";
 import { Card } from "react-bootstrap";
 import EditProfileForm from "./EditProfileForm";
-import * as yup from 'yup'
+
+import buildProfileSchema from './buildProfileSchema'
 
 const db = getDatabase();
 const storage = getStorage();
 
-const profileSchema = yup.object({
-  name: yup.string().required("name is required"),
-  status: yup.string().required("status is required"),
-  bio: yup.string(),
-  pfp: yup.mixed()
-})
+const profileSchema = buildProfileSchema({pfpRequired: true})
 
 export default function CreateProfileCard({ uid }) {
   const userRef = dbRef(db, "user/" + uid);

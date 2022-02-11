@@ -7,17 +7,12 @@ import { getProfilePicUrl } from "../../utils/storage"
 import SuccessToast from "../SuccessToast"
 import Center from "../Center"
 import * as yup from 'yup'
+import buildProfileSchema from "./buildProfileSchema"
 
 const db = getDatabase()
 const storage = getStorage()
 
-const profileSchema = yup.object({
-  name: yup.string().required("name is required"),
-  status: yup.string().required("status is required"),
-  bio: yup.string(),
-  pfp: yup.mixed().required("profile picture is required")
-})
-
+const profileSchema = buildProfileSchema()
 
 export default function EditProfileCard({ uid }) {
   const picRef = storageRef(storage, "profilePic/" + uid)

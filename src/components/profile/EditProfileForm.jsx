@@ -1,26 +1,27 @@
 import React, { useRef, useState } from "react"
 import { useForm, Controller } from "react-hook-form"
-import { Form, Button, Image } from "react-bootstrap"
-import * as yup from "yup"
+import { Form, Button, Image, InputGroup, Row, Col } from "react-bootstrap"
 import { yupResolver } from "@hookform/resolvers/yup"
 
 const initialValues = {
   name: "",
   status: "",
   bio: "",
+  phoneNumber: "",
+  venmoUsername: "",
   pfp: null
 }
 
 export default function EditProfileForm({
   defaultValues = {},
   schema,
-  initialSrc,
+  initialSrc = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
   onSubmit,
   buttonText
 }) {
   const fileInputRef = useRef()
 
-  const [src, setSrc] = useState(initialSrc ?? null)
+  const [src, setSrc] = useState(null)
 
   const {
     handleSubmit,
@@ -49,10 +50,7 @@ export default function EditProfileForm({
             return (
               <div className="d-flex align-items-center flex-column">
                 <Image
-                  src={
-                    src ??
-                    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-                  }
+                  src={src ?? initialSrc}
                   width={200}
                   height={200}
                   className="border rounded-circle"
@@ -76,44 +74,97 @@ export default function EditProfileForm({
                   {field.value?.src ? "Upload new photo" : "Upload a photo"}
                 </Button>
                 {fieldState.error?.message && (
-                <Form.Text>{fieldState.error?.message}</Form.Text>
-              )}
+                  <Form.Text>{fieldState.error?.message}</Form.Text>
+                )}
               </div>
             )
           }}
         />
-        <Controller
-          control={control}
-          name="name"
-          render={({ field, fieldState }) => (
-            <Form.Group className="mb-3">
-              <Form.Label>Full Name</Form.Label>
-              <Form.Control type="text" placeholder="Your name" {...field} />
-              {fieldState.error?.message && (
-                <Form.Text>{fieldState.error?.message}</Form.Text>
+        <Row>
+          <Col>
+            <Controller
+              control={control}
+              name="name"
+              render={({ field, fieldState }) => (
+                <Form.Group className="mb-3">
+                  <Form.Label>Full Name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Your name"
+                    {...field}
+                  />
+                  {fieldState.error?.message && (
+                    <Form.Text>{fieldState.error?.message}</Form.Text>
+                  )}
+                </Form.Group>
               )}
-            </Form.Group>
-          )}
-        />
-        <Controller
-          control={control}
-          name="status"
-          render={({ field, fieldState }) => (
-            <Form.Group className="mb-3">
-              <Form.Label>Status</Form.Label>
-              <Form.Select {...field}>
-                <option value=""></option>
-                <option value="moma">Sugar Moma</option>
-                <option value="papa">Sugar Papa</option>
-                <option value="boy">Baby boy</option>
-                <option value="girl">Baby girl</option>
-              </Form.Select>
-              {fieldState.error?.message && (
-                <Form.Text>{fieldState.error?.message}</Form.Text>
+            />
+          </Col>
+          <Col>
+            <Controller
+              control={control}
+              name="status"
+              render={({ field, fieldState }) => (
+                <Form.Group className="mb-3">
+                  <Form.Label>Status</Form.Label>
+                  <Form.Select {...field}>
+                    <option value=""></option>
+                    <option value="moma">Sugar Moma</option>
+                    <option value="papa">Sugar Papa</option>
+                    <option value="boy">Baby boy</option>
+                    <option value="girl">Baby girl</option>
+                  </Form.Select>
+                  {fieldState.error?.message && (
+                    <Form.Text>{fieldState.error?.message}</Form.Text>
+                  )}
+                </Form.Group>
               )}
-            </Form.Group>
-          )}
-        />
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Controller
+              control={control}
+              name="phoneNumber"
+              render={({ field, fieldState }) => (
+                <Form.Group className="mb-3">
+                  <Form.Label>Phone Number</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="1234567890"
+                    {...field}
+                  />
+                  {fieldState.error?.message && (
+                    <Form.Text>{fieldState.error?.message}</Form.Text>
+                  )}
+                </Form.Group>
+              )}
+            />
+          </Col>
+          <Col>
+            <Controller
+              control={control}
+              name="venmoUsername"
+              render={({ field, fieldState }) => (
+                <Form.Group className="mb-3">
+                  <Form.Label>Venmo Username</Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text>@</InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      placeholder="your_username"
+                      {...field}
+                    />
+                  </InputGroup>
+                  {fieldState.error?.message && (
+                    <Form.Text>{fieldState.error?.message}</Form.Text>
+                  )}
+                </Form.Group>
+              )}
+            />
+          </Col>
+        </Row>
         <Controller
           control={control}
           name="bio"
