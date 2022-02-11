@@ -38,7 +38,7 @@ export default function AppRoot() {
         <LoadingSpinner />
       </Center>
     );
-
+    
   const uid = user?.uid;
 
   const authLevel = user ? (profile ? 2 : 1) : 0;

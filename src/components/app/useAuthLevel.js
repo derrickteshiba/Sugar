@@ -37,8 +37,9 @@ export default function useAuthLevel() {
   }, []);
 
   useEffect(() => {
-    if (loading) return;
     return onAuthStateChanged(getAuth(), async (user) => {
+      if (loading) return
+      
       if (!user) return setAuthState(initialState);
 
       const userRef = dbRef(db, "user/" + user.uid);
@@ -52,5 +53,5 @@ export default function useAuthLevel() {
     });
   }, [loading]);
 
-  return authState;
+  return {...authState, loading};
 }
