@@ -1,69 +1,56 @@
-import React, { useRef } from "react";
-import { useForm, Controller } from "react-hook-form";
-import { Form, Button, Image } from "react-bootstrap";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import React, { useRef, useState } from "react"
+import { useForm, Controller } from "react-hook-form"
+import { Form, Button, Image } from "react-bootstrap"
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 const initialValues = {
   name: "",
   status: "",
   bio: "",
-};
+  pfp: null
+}
 
 export default function EditProfileForm({
   defaultValues = {},
+  schema,
+  initialSrc,
   onSubmit,
-  buttonText,
-  pfpRequired,
+  buttonText
 }) {
-  const fileInputRef = useRef();
+  const fileInputRef = useRef()
 
-  const profileSchema = yup.object({
-    name: yup.string().required("name is required"),
-    status: yup.string().required("status is required"),
-    bio: yup.string(),
-    pfp: yup.object().shape({
-      file: pfpRequired
-        ? yup.mixed().required("profile picture is required")
-        : yup.mixed(),
-      src: yup.string(),
-    }),
-  });
+  const [src, setSrc] = useState(initialSrc ?? null)
 
   const {
     handleSubmit,
-    setValue,
     control,
-    formState: { isSubmitting },
+    formState: { isSubmitting }
   } = useForm({
     defaultValues: {
       ...initialValues,
-      ...defaultValues,
+      ...defaultValues
     },
-    resolver: yupResolver(profileSchema),
-  });
+    resolver: yupResolver(schema)
+  })
 
   return (
     <>
       <Form
         noValidate
         onSubmit={handleSubmit(async (input) => {
-          await onSubmit(input);
-          setValue("pfp.file", null);
+          await onSubmit(input)
         })}
       >
         <Controller
           control={control}
           name="pfp"
           render={({ field, fieldState }) => {
-            const message = Object.entries(fieldState.error ?? {})?.[0]?.[1]
-              .message;
-
             return (
               <div className="d-flex align-items-center flex-column">
                 <Image
                   src={
-                    field.value?.src ??
+                    src ??
                     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                   }
                   width={200}
@@ -75,11 +62,9 @@ export default function EditProfileForm({
                   hidden
                   type="file"
                   onChange={(e) => {
-                    const file = e.target.files[0];
-                    field.onChange({
-                      file,
-                      src: URL.createObjectURL(file),
-                    });
+                    const file = e.target.files[0]
+                    setSrc(file ? URL.createObjectURL(file) : null)
+                    field.onChange(file)
                   }}
                   ref={fileInputRef}
                 />
@@ -90,9 +75,11 @@ export default function EditProfileForm({
                 >
                   {field.value?.src ? "Upload new photo" : "Upload a photo"}
                 </Button>
-                {message && <Form.Text>{message}</Form.Text>}
+                {fieldState.error?.message && (
+                <Form.Text>{fieldState.error?.message}</Form.Text>
+              )}
               </div>
-            );
+            )
           }}
         />
         <Controller
@@ -149,5 +136,5 @@ export default function EditProfileForm({
         </Button>
       </Form>
     </>
-  );
+  )
 }

@@ -3,9 +3,17 @@ import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import React from "react";
 import { Card } from "react-bootstrap";
 import EditProfileForm from "./EditProfileForm";
+import * as yup from 'yup'
 
 const db = getDatabase();
 const storage = getStorage();
+
+const profileSchema = yup.object({
+  name: yup.string().required("name is required"),
+  status: yup.string().required("status is required"),
+  bio: yup.string(),
+  pfp: yup.mixed()
+})
 
 export default function CreateProfileCard({ uid }) {
   const userRef = dbRef(db, "user/" + uid);
@@ -13,7 +21,7 @@ export default function CreateProfileCard({ uid }) {
 
   const onSubmit = async ({ pfp, ...newProfile }) => {
     const setProfile = set(userRef, newProfile);
-    const storePfp = uploadBytes(picRef, pfp.file);
+    const storePfp = uploadBytes(picRef, pfp);
 
     await Promise.all([setProfile, storePfp]);
   };
@@ -28,6 +36,7 @@ export default function CreateProfileCard({ uid }) {
           <EditProfileForm
             onSubmit={onSubmit}
             buttonText="Create Profile"
+            schema={profileSchema}
             pfpRequired
           />
         </Card.Body>
