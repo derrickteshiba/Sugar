@@ -6,7 +6,6 @@ import EditProfileForm from "./EditProfileForm"
 import { getProfilePicUrl } from "../../utils/storage"
 import SuccessToast from "../SuccessToast"
 import Center from "../Center"
-import * as yup from 'yup'
 import buildProfileSchema from "./buildProfileSchema"
 
 const db = getDatabase()
