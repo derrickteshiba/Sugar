@@ -11,6 +11,7 @@ import AppNavbar from "../app/Navbar";
 import useAuthLevel from "../app/useAuthLevel";
 import Login from "../LoginSignup/Login";
 import Signup from "../LoginSignup/Signup";
+import Search from "../search/searchBar";
 
 const SignupPagePlaceholder = () => <Signup />;
 // TODO
@@ -18,7 +19,7 @@ const SignupPagePlaceholder = () => <Signup />;
 // TODO
 const LoginPagePlaceholder = () => <Login />;
 
-const SearchPagePlaceholder = () => <p>Search</p>;
+const SearchPagePlaceholder = () => <Search />;
 // TODO
 const MatchesPagePlaceholder = () => <p>Matches</p>;
 
