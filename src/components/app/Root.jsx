@@ -2,17 +2,18 @@ import React from "react";
 
 import { Routes, Route, Outlet } from "react-router-dom";
 
-import EditProfileCard from "../profile/EditProfileCard";
-import CreateProfileCard from "../profile/CreateProfileCard";
-import LoadingSpinner from "../LoadingSpinner";
-import Center from "../Center";
-import Protected from "../auth/Protected";
-import AppNavbar from "../app/Navbar";
-import useAuthLevel from "../app/useAuthLevel";
-import Login from "../LoginSignup/Login";
-import Signup from "../LoginSignup/Signup";
+import EditProfileCard from "../profile/EditProfileCard"
+import CreateProfileCard from "../profile/CreateProfileCard"
+import LoadingSpinner from "../LoadingSpinner"
+import Center from "../Center"
+import Protected from "../auth/Protected"
+import AppNavbar from "../app/Navbar"
+import useAuthLevel from "../app/useAuthLevel"
+import Login from "../LoginSignup/Login"
+import Signup from "../LoginSignup/Signup"
+import Matches from "./matches"
 
-const SignupPagePlaceholder = () => <Signup />;
+const SignupPagePlaceholder = () => <Signup />
 // TODO
 
 // TODO
@@ -20,7 +21,7 @@ const LoginPagePlaceholder = () => <Login />;
 
 const SearchPagePlaceholder = () => <p>Search</p>;
 // TODO
-const MatchesPagePlaceholder = () => <p>Matches</p>;
+const MatchesPagePlaceholder = () => <Matches />
 
 /**
  * Auth Level:
