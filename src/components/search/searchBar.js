@@ -39,15 +39,16 @@ import { getDatabase, ref, child, get, onValue } from "firebase/database";
 import { useEffect } from "react";
 import React, { useState } from 'react';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { Link } from "react-router-dom";
 
-export default function CustomerContent() {
+export default function Search() {
     const [sugarUsers, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
     function printUsers() {
         const db = getDatabase();
         var users = ref(db, 'user');
-        get(users).then((snapshot) => {
+        onValue(users, (snapshot) => {
             const newUsers = [];
             snapshot.forEach((snap) => {
                 const userVal= snap.val();
@@ -78,7 +79,13 @@ export default function CustomerContent() {
                        return user;
                     }
                 }).map((user) => {
-                        return <li>{user.name + " " + user.userId}</li>;
+                        return <li key = {user.userId}>
+                            <Link as={Link} to = "/viewprofile" state = {{
+                                uid : user.userId
+                            }}>
+                                {user.name + " " + user.userId}
+                            </Link>
+                        </li>;
                 })}
             </ul>
         </div>

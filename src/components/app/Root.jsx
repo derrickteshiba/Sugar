@@ -12,6 +12,8 @@ import useAuthLevel from "../app/useAuthLevel";
 import Login from "../LoginSignup/Login";
 import Signup from "../LoginSignup/Signup";
 import Search from "../search/searchBar";
+import ViewProfile from "../profile/ViewProfileCard";
+import { useLocation } from "react-router-dom";
 
 const SignupPagePlaceholder = () => <Signup />;
 // TODO
@@ -22,6 +24,13 @@ const LoginPagePlaceholder = () => <Login />;
 const SearchPagePlaceholder = () => <Search />;
 // TODO
 const MatchesPagePlaceholder = () => <p>Matches</p>;
+
+const ViewProfilePagePlaceholder = () => {
+  const location = useLocation();
+  const {uid} = location.state;
+  //return <p>{uid}</p>
+  return <ViewProfile uid ={uid}/>;
+}
 
 /**
  * Auth Level:
@@ -69,6 +78,7 @@ export default function AppRoot() {
         <Route element={renderProtection(2)}>
           <Route exact path="/search" element={<SearchPagePlaceholder />} />
           <Route exact path="/matches" element={<MatchesPagePlaceholder />} />
+          <Route exact path="/viewprofile" element={<ViewProfilePagePlaceholder />} />
 
           <Route
             exact
