@@ -50,9 +50,13 @@ export default function CustomerContent() {
         get(users).then((snapshot) => {
             const newUsers = [];
             snapshot.forEach((snap) => {
-                const userObject = snap.val();
-                const name = userObject.name;
-                newUsers.push(name);
+                const userVal= snap.val();
+                const userId = snap.key;
+                const userObject = {
+                    "name" : userVal.name,
+                    "userId" : userId
+                };
+                newUsers.push(userObject);
             });
             setUsers(newUsers);
         });
@@ -70,11 +74,11 @@ export default function CustomerContent() {
                 {sugarUsers.filter((user) => {
                     if (searchTerm === "") {
                         return user;
-                    } else if (user.toLowerCase().includes(searchTerm.toLowerCase())) {
+                    } else if (user.name.toLowerCase().includes(searchTerm.toLowerCase())) {
                        return user;
                     }
                 }).map((user) => {
-                        return <li>{user}</li>;
+                        return <li>{user.name + " " + user.userId}</li>;
                 })}
             </ul>
         </div>
