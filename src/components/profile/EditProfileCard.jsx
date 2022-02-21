@@ -15,7 +15,7 @@ const profileSchema = buildProfileSchema()
 
 export default function EditProfileCard({ uid }) {
   const picRef = storageRef(storage, "profilePic/" + uid)
-
+  
   const [profile, setProfile] = useState({
     data: null,
     loading: true

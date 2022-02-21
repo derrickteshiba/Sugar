@@ -21,7 +21,7 @@ const LoginPagePlaceholder = () => <Login />;
 
 const SearchPagePlaceholder = () => <p>Search</p>;
 // TODO
-const MatchesPagePlaceholder = () => <Matches />
+// const MatchesPagePlaceholder = () => <Matches />
 
 /**
  * Auth Level:
@@ -68,8 +68,11 @@ export default function AppRoot() {
         </Route>
         <Route element={renderProtection(2)}>
           <Route exact path="/search" element={<SearchPagePlaceholder />} />
-          <Route exact path="/matches" element={<MatchesPagePlaceholder />} />
-
+          <Route 
+            exact 
+            path="/matches" 
+            element={<Matches uid={uid} />} 
+          />
           <Route
             exact
             path="/profile"
