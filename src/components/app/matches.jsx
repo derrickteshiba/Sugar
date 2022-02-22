@@ -55,14 +55,14 @@ export default function Matches({uid}) {
             <h3>Pending:</h3>
             <Row className="justify-content-md-center">
                 <MatchProfilePending uid="bPcbMZMxzVZUIwfgGH6wKCY7qmG3" />
-                {pendingNames.map(d => (<p>{d[0]}</p>))} 
+                {/* {pendingNames.map(d => (<p>{d[0]}</p>))}  */}
             </Row> 
         </Container>
         <Container>
             <h3>MATCHED!!!</h3>
             <Row className="justify-content-md-center">
                 <MatchProfileAccepted uid={uid}/>
-                {acceptedNames.map(d => (<p>{d[0]}</p>))} 
+                {/* {acceptedNames.map(d => (<p>{d[0]}</p>))}  */}
             </Row> 
         </Container>
      </>

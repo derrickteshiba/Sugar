@@ -47,9 +47,24 @@ export function MatchProfilePending( {uid}, {matchid} ) {
 
     return (
     <>
-        <Button variant="success" onClick = {handleClickAccept(matchid)}>Accept</Button>{' '}
-        <Button variant="danger" onClick = {handleClickReject(matchid)}>Reject</Button>{' '}
-        <Accordion defaultActiveKey="0" style={{ width: '70%' }}>
+    <Container className="text-center">
+        <Row>
+        <div>
+        <Button 
+        style={{ width: '45%'}}
+        variant="success" 
+        onClick = {handleClickAccept(matchid)}
+        className=" text-center mt-2"
+        >Accept</Button>{' '}
+        <Button 
+        variant="danger" 
+        onClick = {handleClickReject(matchid)}
+        style={{ width: '45%' }}
+        className=" text-center mt-2"
+        >Reject</Button>{' '}
+        </div>
+        </Row>
+        <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
                 <Row style={{ width: '100%' }}>
@@ -75,6 +90,7 @@ export function MatchProfilePending( {uid}, {matchid} ) {
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
+    </Container>
      </>
   )
 }
@@ -109,7 +125,7 @@ export function MatchProfileAccepted( {uid} ) {
 
     return (
     <>
-        <Accordion defaultActiveKey="0" style={{ width: '70%' }}>
+        <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
                 <Row style={{ width: '100%' }}>
