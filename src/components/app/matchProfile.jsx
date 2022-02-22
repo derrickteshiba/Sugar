@@ -47,8 +47,8 @@ export function MatchProfilePending( {uid}, {matchid} ) {
 
     return (
     <>
-    <Container className="text-center">
-        <Row>
+    <Container>
+        <Row className="text-center">
         <div>
         <Button 
         style={{ width: '45%'}}
