@@ -5,7 +5,19 @@ import { getProfilePicUrl } from "../../utils/storage"
 
 const db = getDatabase()
 
-export function MatchProfilePending( {uid} ) {
+
+function handleClickReject(id)
+{
+    
+}
+
+function handleClickAccept(id)
+{
+
+}
+
+
+export function MatchProfilePending( {uid}, {matchid} ) {
     const picRef = getProfilePicUrl(uid)
 
     const [profile, setProfile] = useState({
@@ -35,8 +47,8 @@ export function MatchProfilePending( {uid} ) {
 
     return (
     <>
-        <Button id = {uid} variant="success">Accept</Button>{' '}
-        <Button variant="danger">Reject</Button>{' '}
+        <Button variant="success" onClick = {handleClickAccept(matchid)}>Accept</Button>{' '}
+        <Button variant="danger" onClick = {handleClickReject(matchid)}>Reject</Button>{' '}
         <Accordion defaultActiveKey="0" style={{ width: '70%' }}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
