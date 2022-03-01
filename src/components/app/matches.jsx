@@ -32,7 +32,7 @@ export default function Matches({uid}) {
             const newMatches= [];
             snapshot.forEach((snap) => {
                 const match = snap.val();
-                const matchId = match.key;
+                const matchId = snap.key;
                 const matchObject = {
                     "sender" : match.sender,
                     "reciever" : match.reciever,
