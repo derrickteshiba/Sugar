@@ -6,18 +6,18 @@ import { getProfilePicUrl } from "../../utils/storage"
 const db = getDatabase()
 
 
-function handleClickReject(id)
+function handleClickReject(id, uid)
 {
-    
+    //writeMatch(id, "reject", uid);
 }
 
-function handleClickAccept(id)
+function handleClickAccept(id, uid)
 {
-
+    //writeMatch(id, "match", uid)
 }
 
 
-export function MatchProfilePending( {uid}, {matchid} ) {
+export function MatchProfilePending( {uid}, {id} ) {
     const picRef = getProfilePicUrl(uid)
 
     const [profile, setProfile] = useState({
@@ -53,12 +53,12 @@ export function MatchProfilePending( {uid}, {matchid} ) {
         <Button 
         style={{ width: '45%'}}
         variant="success" 
-        onClick = {handleClickAccept(matchid)}
+        onClick = {handleClickAccept(uid, id)}
         className=" text-center mt-2"
         >Accept</Button>{' '}
         <Button 
         variant="danger" 
-        onClick = {handleClickReject(matchid)}
+        onClick = {handleClickReject(uid, id)}
         style={{ width: '45%' }}
         className=" text-center mt-2"
         >Reject</Button>{' '}

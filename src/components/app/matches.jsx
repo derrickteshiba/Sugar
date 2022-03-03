@@ -52,7 +52,7 @@ export default function Matches({uid}) {
     console.log(matches)
     console.log(uid)
     const pendingMatches = matches.filter(match =>(
-        (match.reciever === uid || match.sender === uid) && match.status === "pending"
+        match.reciever === uid && match.status === "pending"
         )
     )
     const acceptedMatches = matches.filter(match =>(
@@ -79,13 +79,13 @@ export default function Matches({uid}) {
         <Container>
             <h3>Pending:</h3>
             <Row className="justify-content-md-center">
-                {pendingNames.map(d => (<MatchProfilePending>{d[0]}</MatchProfilePending>))} 
+                {pendingNames.map(d => (<MatchProfilePending>{d[0]}, {uid}</MatchProfilePending>))} 
             </Row> 
         </Container>
         <Container>
             <h3>MATCHED!!!</h3>
             <Row className="justify-content-md-center">
-                {acceptedNames.map(d => (<MatchProfileAccepted>{d[0]}</MatchProfileAccepted>))} 
+                {acceptedNames.map(d => (<MatchProfileAccepted>{d[0]}, {uid}</MatchProfileAccepted>))} 
             </Row> 
         </Container>
      </>
