@@ -47,9 +47,10 @@ export function MatchProfilePending( {uid}, {id} ) {
 
     return (
     <>
-    <Container>
-        <Row className="text-center">
+    <div class="card text-white bg-dark mb-2">
+        {/* <Row className="text-center"> */}
         <div>
+        <div class="card-header" className="text-center">
         <Button 
         style={{ width: '45%'}}
         variant="success" 
@@ -63,8 +64,9 @@ export function MatchProfilePending( {uid}, {id} ) {
         className=" text-center mt-2"
         >Reject</Button>{' '}
         </div>
-        </Row>
-        <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
+        </div>
+        {/* </Row> */}
+        <Accordion className="mt-2" defaultActiveKey="0" style={{ width: '100%'}}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
                 <Row style={{ width: '100%' }}>
@@ -90,7 +92,11 @@ export function MatchProfilePending( {uid}, {id} ) {
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
-    </Container>
+        <div className="mt-2">
+        </div>
+    </div>
+    <div className="mt-.5">
+    </div>
      </>
   )
 }
@@ -125,6 +131,7 @@ export function MatchProfileAccepted( {uid} ) {
 
     return (
     <>
+    <div class="card text-white bg-dark mb-3">
         <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
@@ -149,6 +156,11 @@ export function MatchProfileAccepted( {uid} ) {
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
+        <div className="mt-3">
+        </div>
+    </div>
+    <div className="mt-3">
+    </div>
      </>
   )
 }

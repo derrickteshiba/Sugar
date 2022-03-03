@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import {Container, Row} from 'react-bootstrap'
+import {Accordion, Container, Row} from 'react-bootstrap'
 import {MatchProfilePending, MatchProfileAccepted} from "./matchProfile"
 // import { getDatabase, ref as dbRef, set, get } from "firebase/database"
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage"
@@ -77,16 +77,26 @@ export default function Matches({uid}) {
         </div>
         <br />
         <Container>
+        <Accordion>
+            <Accordion.Header>
             <h3>Pending:</h3>
+            </Accordion.Header>
+            <Accordion.Body>
             <Row className="justify-content-md-center">
                 {pendingNames.map(d => (<MatchProfilePending>{d[0]}, {uid}</MatchProfilePending>))} 
             </Row> 
-        </Container>
-        <Container>
-            <h3>MATCHED!!!</h3>
+            </Accordion.Body>
+        </Accordion>
+        <Accordion>
+            <Accordion.Header>
+            <h3>Matches:</h3>
+            </Accordion.Header>
+            <Accordion.Body>
             <Row className="justify-content-md-center">
                 {acceptedNames.map(d => (<MatchProfileAccepted>{d[0]}, {uid}</MatchProfileAccepted>))} 
             </Row> 
+            </Accordion.Body>
+        </Accordion>
         </Container>
      </>
   )
