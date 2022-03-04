@@ -17,9 +17,8 @@ function handleClickAccept(id, uid)
 }
 
 
-export function MatchProfilePending( {uid}, {id} ) {
+export function MatchProfilePending( {uid} ) {
     const picRef = getProfilePicUrl(uid)
-
     const [profile, setProfile] = useState({
         data: null,
         loading: true
@@ -37,29 +36,23 @@ export function MatchProfilePending( {uid}, {id} ) {
         })
     }, [uid])
 
-    if (!profile.data)
-    {
-        console.log("no data")
-        return (
-            <p>ERROR: no data</p>
-        )
-    }
+    if (profile.loading) return null
 
     return (
     <>
-    <div class="card text-white bg-dark mb-2">
+    <div className="card bg-dark mb-2">
         {/* <Row className="text-center"> */}
         <div>
-        <div class="card-header" className="text-center">
+        <div className="card-header" className="text-center">
         <Button 
         style={{ width: '45%'}}
         variant="success" 
-        onClick = {handleClickAccept(uid, id)}
+        onClick = {handleClickAccept(uid)}
         className=" text-center mt-2"
         >Accept</Button>{' '}
         <Button 
         variant="danger" 
-        onClick = {handleClickReject(uid, id)}
+        onClick = {handleClickReject(uid)}
         style={{ width: '45%' }}
         className=" text-center mt-2"
         >Reject</Button>{' '}
@@ -125,7 +118,7 @@ export function MatchProfileAccepted( {uid} ) {
 
     return (
     <>
-    <div class="card bg-dark mb-3">
+    <div className="card bg-dark mb-3">
         <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>

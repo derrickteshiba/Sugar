@@ -66,7 +66,6 @@ export default function Matches({uid}) {
     console.log("Pending: " + pendingNames);
     console.log("Accepted: " + acceptedNames);
 
-
     return (
     <>
         <br />  
@@ -83,7 +82,7 @@ export default function Matches({uid}) {
             </Accordion.Header>
             <Accordion.Body>
             <Row className="justify-content-md-center">
-                {pendingNames.map(d => (<MatchProfilePending>{d[0]}, {uid}</MatchProfilePending>))} 
+                {pendingNames.map(d => (<MatchProfilePending uid={d[0]} />))} 
             </Row> 
             </Accordion.Body>
         </Accordion>
@@ -93,7 +92,7 @@ export default function Matches({uid}) {
             </Accordion.Header>
             <Accordion.Body>
             <Row className="justify-content-md-center">
-                {acceptedNames.map(d => (<MatchProfileAccepted>{d[0]}, {uid}</MatchProfileAccepted>))} 
+                {acceptedNames.map(d => (<MatchProfileAccepted uid={d[0]} />))} 
             </Row> 
             </Accordion.Body>
         </Accordion>

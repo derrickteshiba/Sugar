@@ -9,7 +9,8 @@ export default function App() {
   return (
     <Router>
       <div className="d-flex w-100 vh-100 flex-column">
-        <MatchProfileAccepted uid={'54X7E4YjS8R0en4qXGOWvfkUoeV2'}/>
+        <AppRoot />
+        {/* <MatchProfileAccepted uid={'54X7E4YjS8R0en4qXGOWvfkUoeV2'}/> */}
       </div>
     </Router>
   );
