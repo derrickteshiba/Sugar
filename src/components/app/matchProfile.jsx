@@ -120,18 +120,12 @@ export function MatchProfileAccepted( {uid} ) {
           })
         })
     }, [uid])
-
-    if (!profile.data)
-    {
-        console.log("no data")
-        return (
-            <p>ERROR: no data</p>
-        )
-    }
+    
+    if (profile.loading) return null
 
     return (
     <>
-    <div class="card text-white bg-dark mb-3">
+    <div class="card bg-dark mb-3">
         <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
