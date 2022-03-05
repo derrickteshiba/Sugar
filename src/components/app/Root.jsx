@@ -12,7 +12,7 @@ import useAuthLevel from "../app/useAuthLevel";
 import Login from "../LoginSignup/Login";
 import Signup from "../LoginSignup/Signup";
 import Search from "../search/searchBar";
-import ViewProfile from "../profile/ViewProfileCard";
+import ViewProfile from "../profile/ViewProfileForm";
 import { useLocation } from "react-router-dom";
 
 const SignupPagePlaceholder = () => <Signup />;

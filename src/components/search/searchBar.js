@@ -45,6 +45,8 @@ export default function Search() {
     const [sugarUsers, setUsers] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
 
+
+
     function printUsers() {
         const db = getDatabase();
         var users = ref(db, 'user');
@@ -55,7 +57,8 @@ export default function Search() {
                 const userId = snap.key;
                 const userObject = {
                     "name" : userVal.name,
-                    "userId" : userId
+                    "userId" : userId,
+                    "status" :userVal.status
                 };
                 newUsers.push(userObject);
             });
@@ -73,11 +76,11 @@ export default function Search() {
             <h2>Our Users</h2>
             <ul>
                 {sugarUsers.filter((user) => {
-                    if (searchTerm === "") {
-                        return user;
-                    } else if (user.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                       return user;
-                    }
+                        if (searchTerm === "") {
+                            return user;
+                        } else if (user.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                            return user;
+                        }
                 }).map((user) => {
                         return <li key = {user.userId}>
                             <Link as={Link} to = "/viewprofile" state = {{
@@ -91,3 +94,6 @@ export default function Search() {
         </div>
     );
 }
+
+
+
