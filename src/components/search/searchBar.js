@@ -1,10 +1,11 @@
-import { getDatabase, ref, onValue, get, push, set, update } from "firebase/database";
+import { getDatabase, ref, onValue, get, push, set, update, onChildAdded } from "firebase/database";
 import { useEffect } from "react";
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import { Button, Stack, Card, Container, Row, Col } from "react-bootstrap"
 import { getProfilePicUrl } from "../../utils/storage"
 import useAuthLevel from "../app/useAuthLevel";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./searchBar.css"
 //FIX: when typing in search bar the paging gets messed up
 //FIX: split into multiple files
@@ -14,47 +15,52 @@ import "./searchBar.css"
 //NOTE: Don't be a dummy like me and run the script repeatedly. You will use up the firebase storage limit for the day fetching images repeatedly.
 export default function Search() {
     const [sugarUsers, setUsers] = useState([]);
-    const [matches, setMatches] = useState([]);
+    const [matchesList, setMatches] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(0);
     const { user, profile } = useAuthLevel();
     const uid = user?.uid;
     const db = getDatabase();
     function getUserInfo() {
-        var users = ref(db, 'user');
-        return onValue(users, (snapshot) => {
-            const newUsers = [];
-            snapshot.forEach((snap) => {
-                const userVal= snap.val();
-                const userId = snap.key;
-                const userObject = {
-                    "name" : userVal.name,
-                    "userId" : userId,
-                    "bio" : userVal.bio,
-                    "shouldDisplay" : true
-                };
-                newUsers.push(userObject);
-            });
-            setUsers(newUsers);
-        });
-    }
-    function getMatches() {
-        const matches = ref(db, 'matches');
-        return onValue(matches, (snapshot) => {
-            const newMatches= [];
+        const matchesRef = ref(db, 'matches');
+        const userRef = ref(db, 'user');
+        const newUsers = [];
+        const newMatches = [];
+        const currentUser = getAuth().currentUser.uid
+        onValue(matchesRef, (snapshot) => {
             snapshot.forEach((snap) => {
                 const match = snap.val();
-                const matchId = match.key;
+                const matchId = snap.key;
                 const matchObject = {
                     "sender" : match.sender,
                     "reciever" : match.reciever,
-                    "status" : match.status,
+                    "status" : match.matchStatus,
                     "matchId" : matchId
                 };
                 newMatches.push(matchObject);
             });
             setMatches(newMatches);
-        });
+        })
+        onValue(userRef, (snapshot) => {
+            snapshot.forEach((snap) => {
+                let display = true
+                for(let i = 0; i < newMatches.length; i++) {
+                    if (newMatches[i].reciever === snap.key && newMatches[i].sender === currentUser) {
+                        display = false
+                    }
+                }
+                const userVal = snap.val();
+                const userId = snap.key;
+                const userObject = {
+                    "name" : userVal.name,
+                    "userId" : userId,
+                    "bio" : userVal.bio,
+                    "shouldDisplay" : display
+                }
+                newUsers.push(userObject);
+            })
+            setUsers(newUsers);
+        })
     }
     
     function nextPage() {
@@ -89,7 +95,7 @@ export default function Search() {
                 const newMatch = {
                     "sender" : uid,
                     "reciever" : recieverId,
-                    "matchStatus" : newStatus
+                    "matchStatus" : newStatus,
                 }
                 push(matches, newMatch);
             }
@@ -110,12 +116,33 @@ export default function Search() {
             }
         } 
         if(updatedUsers)
+            console.log(updatedUsers)
             setUsers(updatedUsers);
+    }
+    function setDisplay() {
+        const updatedUsers = [];
+        for(var i = 0; i < sugarUsers.length; i++) {
+            var shouldPush = true;
+            for(var j = 0; j < matchesList.length; j++) {
+                if (sugarUsers[i].userId === matchesList[j].reciever) {
+                    const hideUser = {
+                        ...sugarUsers[i],
+                       "shouldDisplay": false
+                    }
+                    updatedUsers.push(hideUser);
+                    shouldPush = false;
+                }
+            }
+            if (shouldPush) {
+                updatedUsers.push(sugarUsers[i]);
+            }
+        } 
+        if(updatedUsers.length !== 0) {
+            setUsers(updatedUsers);
+        }
     }
     useEffect(() => {
         getUserInfo();
-       // getMatches()
-       // changeDisplay();
     }, []);
 
     return (

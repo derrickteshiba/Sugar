@@ -13,7 +13,7 @@ import Signup from "../LoginSignup/Signup";
 import Search from "../search/searchBar";
 import ViewProfile from "../profile/ViewProfileCard";
 import { useLocation } from "react-router-dom";
-import matches from "./matches";x
+import Matches from "./matches";
 const SignupPagePlaceholder = () => 
   <Container
     className="d-flex align-items-center justify-content-center"
