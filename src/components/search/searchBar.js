@@ -1,4 +1,4 @@
-import { getDatabase, ref, onValue, get, push, set, update, onChildAdded } from "firebase/database";
+import { getDatabase, ref, onValue, get, push, set, update } from "firebase/database";
 import { useEffect } from "react";
 import React, { useState } from 'react';
 import { Link } from "react-router-dom";
@@ -7,6 +7,7 @@ import { getProfilePicUrl } from "../../utils/storage"
 import useAuthLevel from "../app/useAuthLevel";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./searchBar.css"
+import { connectStorageEmulator } from "firebase/storage";
 //FIX: when typing in search bar the paging gets messed up
 //FIX: split into multiple files
 //FIX: shouldDisplay doesn't latch, resets on refresh.
@@ -21,6 +22,80 @@ export default function Search() {
     const { user, profile } = useAuthLevel();
     const uid = user?.uid;
     const db = getDatabase();
+    function User(props) {
+        return <Card className="single-card" border="dark">
+            <Card.Img src={getProfilePicUrl(props.toDisp?.userId)} className="card-img-singular"/>
+            <Card.Body>
+                <Card.Title className="text-center">
+                    {props.toDisp?.name}
+                </Card.Title>
+                <Row xs="auto">
+                    <Col>
+                        <Link as={Link} to = "/viewprofile" state = {{uid : props.toDisp?.userId }}>
+                            Profile
+                        </Link>
+                    </Col>
+                    <Col>
+                        <Button variant="success" onClick={() => writeMatch(user.userId, "match")}>
+                            Match
+                        </Button> 
+                    </Col>
+                    <Col>
+                        <Button variant="danger" onClick={() => writeMatch(user.userId, "reject")}>
+                            Reject
+                        </Button>
+                    </Col>
+                </Row>
+            </Card.Body>
+        </Card>
+    }
+    function UserList(props) {
+        console.log(props)
+        return <Row xs={1} md={3} className="g-4">
+        {props.sugarUsers.filter((user) => {
+            if (props.searchTerm === "") {
+                return user;
+            } else if (user.name.toLowerCase().includes(props.searchTerm.toLowerCase())) {
+                return user;
+            }
+        }).map((user) => {
+            if(!user.shouldDisplay || !user.typeDisplay) {
+                return
+            }
+            else {
+                return <Col xs={4} key={user.userId}>
+                    <Card border="dark">
+                        <Card.Img src={getProfilePicUrl(user.userId)} className="card-img"/>
+                        <Card.Body>
+                            <Card.Title className="text-center">
+                                {user.name}
+                            </Card.Title>
+                            <Row xs="auto">
+                                <Col>
+                                    <Link as={Link} to = "/viewprofile" state = {{
+                                        uid : user.userId
+                                    }}>
+                                    Profile
+                                    </Link>
+                                </Col>
+                                <Col>
+                                    <Button variant="success" onClick={() => writeMatch(user.userId, "match")}>
+                                     Match
+                                    </Button> 
+                                </Col>
+                                <Col>
+                                    <Button variant="danger" onClick={() => writeMatch(user.userId, "reject")}>
+                                    Reject
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            }
+        })}
+        </Row>
+    }
     function getUserInfo() {
         const matchesRef = ref(db, 'matches');
         const userRef = ref(db, 'user');
@@ -49,29 +124,40 @@ export default function Search() {
                         display = false
                     }
                 }
+                if(currentUser === snap.key) {
+                    display = false
+                }
                 const userVal = snap.val();
                 const userId = snap.key;
                 const userObject = {
                     "name" : userVal.name,
                     "userId" : userId,
                     "bio" : userVal.bio,
-                    "shouldDisplay" : display
+                    "status" : userVal.status,
+                    "shouldDisplay" : display,
+                    "typeDisplay" : true
                 }
                 newUsers.push(userObject);
             })
             setUsers(newUsers);
         })
     }
-    
-    function nextPage() {
-        if(!((page + 1) * 9 > sugarUsers.length))
-            setPage(page + 1);
-    }
-    function prevPage() {
-        if(page !== 0)
-            setPage(page - 1);
+    function check(status, boxStatus) {
+        const display = (boxStatus === "true")
+        const updatedUsers = sugarUsers.map((user) => {
+            if (user.status === status) {
+                const changedUserDisplay = {
+                    ...user,
+                    "typeDisplay" : display
+                }
+                return changedUserDisplay
+            }
+            return user
+        })
+        setUsers(updatedUsers)
     }
     function writeMatch(recieverId, which) {
+        console.log("running")
         const matches = ref(db, 'matches');
         var write = true;
         get(matches).then((snapshot) => {
@@ -116,35 +202,27 @@ export default function Search() {
             }
         } 
         if(updatedUsers)
-            console.log(updatedUsers)
             setUsers(updatedUsers);
     }
-    function setDisplay() {
-        const updatedUsers = [];
-        for(var i = 0; i < sugarUsers.length; i++) {
-            var shouldPush = true;
-            for(var j = 0; j < matchesList.length; j++) {
-                if (sugarUsers[i].userId === matchesList[j].reciever) {
-                    const hideUser = {
-                        ...sugarUsers[i],
-                       "shouldDisplay": false
-                    }
-                    updatedUsers.push(hideUser);
-                    shouldPush = false;
-                }
-            }
-            if (shouldPush) {
-                updatedUsers.push(sugarUsers[i]);
-            }
-        } 
-        if(updatedUsers.length !== 0) {
-            setUsers(updatedUsers);
+    function displayRandomUser(list) {
+        if(list.length === 0) {
+            return
         }
+        const listSize = list.length;
+        let randIndex = Math.floor(Math.random()*listSize)
+        while(list[randIndex].shouldDisplay === false || list[randIndex].typeDisplay === false) {
+            randIndex = Math.floor(Math.random()*listSize)
+        }
+        return list[randIndex]
     }
+
     useEffect(() => {
         getUserInfo();
     }, []);
-
+    let myDisplay = <UserList sugarUsers={sugarUsers} searchTerm={searchTerm} />
+    if (searchTerm === "") {
+        myDisplay = <User toDisp={displayRandomUser(sugarUsers)}/>
+    } 
     return (
         <div className="search">
             <Container>
@@ -154,62 +232,28 @@ export default function Search() {
                             <input type="text" placeholder="Search..." onChange={event => {setSearchTerm(event.target.value)}}/>
                         </Row>
                         <Row>
-                        <Stack direction="horizontal" gap={5}>
-                            <Button onClick={prevPage}>
-                             prevPage
-                            </Button>
-                            <Button onClick={nextPage}>
-                            nextPage
-                            </Button>
-                        </Stack>
+                            <h4>Filter Users</h4>
+                            <label>
+                                <input type="checkbox" defaultChecked={true}  onChange={event => check("papa", event.target._valueTracker.getValue())}/>
+                                Sugar Papa
+                            </label>
+                            <label>
+                                <input type="checkbox" defaultChecked={true} onChange={event => check("moma", event.target._valueTracker.getValue())}/>
+                                Sugar Moma
+                            </label>
+                            <label>
+                                <input type="checkbox" defaultChecked={true} onChange={event => check("boy", event.target._valueTracker.getValue())}/>
+                                Baby Boy
+                            </label>
+                            <label>
+                                <input type="checkbox" defaultChecked={true} onChange={event => check("girl", event.target._valueTracker.getValue())}/>
+                                Baby Girl
+                            </label>
                         </Row>
                     </Col>
                     <Col xs={9}>
                         <h2>Welcome {profile?.name}</h2>
-                        <Row xs={1} md={3} className="g-4">
-                        {sugarUsers.filter((user) => {
-                                if (searchTerm === "") {
-                                    return user;
-                                } else if (user.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                    return user;
-                                }
-                            }).slice(page * 9,page * 9 + 9).map((user) => {
-                                if(user.userId === uid || !user.shouldDisplay) {
-                                    return
-                                }
-                                else {
-                                    return <Col key={user.userId}>
-                                        <Card border="dark">
-                                            <Card.Img src={getProfilePicUrl(user.userId)} className="card-img"/>
-                                            <Card.Body>
-                                                <Card.Title className="text-center">
-                                                    {user.name}
-                                                </Card.Title>
-                                                <Row xs="auto">
-                                                    <Col>
-                                                        <Link as={Link} to = "/viewprofile" state = {{
-                                                            uid : user.userId
-                                                        }}>
-                                                        Profile
-                                                        </Link>
-                                                    </Col>
-                                                    <Col>
-                                                        <Button variant="success" onClick={() => writeMatch(user.userId, "match")}>
-                                                         Match
-                                                        </Button> 
-                                                    </Col>
-                                                    <Col>
-                                                    <Button variant="danger" onClick={() => writeMatch(user.userId, "reject")}>
-                                                    Reject
-                                                    </Button>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                }
-                            })}
-                        </Row>
+                        {myDisplay}
                     </Col>
                 </Row>
             </Container>

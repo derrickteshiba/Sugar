@@ -2,3 +2,9 @@
     height: 15vw;
     object-fit: fill
 }
+.single-card {
+    height: 90vh
+}
+.card-img-singular {
+    height: 40vw
+}
