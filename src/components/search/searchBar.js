@@ -23,6 +23,11 @@ export default function Search() {
     const uid = user?.uid;
     const db = getDatabase();
     function User(props) {
+        if (!props.toDisp) {
+            return <div>
+                No More Users
+            </div>
+        }
         return <Card className="single-card" border="dark">
             <Card.Img src={getProfilePicUrl(props.toDisp?.userId)} className="card-img-singular"/>
             <Card.Body>
@@ -50,7 +55,6 @@ export default function Search() {
         </Card>
     }
     function UserList(props) {
-        console.log(props)
         return <Row xs={1} md={3} className="g-4">
         {props.sugarUsers.filter((user) => {
             if (props.searchTerm === "") {
@@ -157,7 +161,6 @@ export default function Search() {
         setUsers(updatedUsers)
     }
     function writeMatch(recieverId, which) {
-        console.log("running")
         const matches = ref(db, 'matches');
         var write = true;
         get(matches).then((snapshot) => {
@@ -208,10 +211,15 @@ export default function Search() {
         if(list.length === 0) {
             return
         }
+        let listCount = 0;
         const listSize = list.length;
         let randIndex = Math.floor(Math.random()*listSize)
         while(list[randIndex].shouldDisplay === false || list[randIndex].typeDisplay === false) {
             randIndex = Math.floor(Math.random()*listSize)
+            listCount++;
+            if(listCount === list.length) {
+                return
+            }
         }
         return list[randIndex]
     }
