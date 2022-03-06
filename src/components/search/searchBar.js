@@ -36,12 +36,12 @@ export default function Search() {
                         </Link>
                     </Col>
                     <Col>
-                        <Button variant="success" onClick={() => writeMatch(user.userId, "match")}>
+                        <Button variant="success" onClick={() => writeMatch(props.toDisp?.userId, "match")}>
                             Match
                         </Button> 
                     </Col>
                     <Col>
-                        <Button variant="danger" onClick={() => writeMatch(user.userId, "reject")}>
+                        <Button variant="danger" onClick={() => writeMatch(props.toDisp?.userId, "reject")}>
                             Reject
                         </Button>
                     </Col>
