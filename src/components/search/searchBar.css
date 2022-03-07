@@ -6,5 +6,10 @@
     height: 90vh
 }
 .card-img-singular {
-    height: 40vw
+    height: 35vw
+}
+.user-header {
+    display: flex;
+    text-align: center;
+    justify-content: center;
 }

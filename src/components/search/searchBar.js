@@ -260,7 +260,9 @@ export default function Search() {
                         </Row>
                     </Col>
                     <Col xs={9}>
-                        <h2>Welcome {profile?.name}</h2>
+                        <h2 className="user-header"> 
+                            Welcome {profile?.name}
+                        </h2>
                         {myDisplay}
                     </Col>
                 </Row>
