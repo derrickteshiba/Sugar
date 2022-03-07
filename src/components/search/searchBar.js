@@ -31,7 +31,9 @@ export default function Search() {
             <Card.Img src={getProfilePicUrl(props.toDisp?.userId)} className="card-img-singular"/>
             <Card.Body>
                 <Card.Title className="text-center">
-                    {props.toDisp?.name}
+                    <h2>
+                        {props.toDisp?.name}
+                    </h2>
                 </Card.Title>
                 <Card.Text>
                 <Row>
