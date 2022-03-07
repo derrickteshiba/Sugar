@@ -11,7 +11,7 @@ import useAuthLevel from "../app/useAuthLevel";
 import Login from "../LoginSignup/Login";
 import Signup from "../LoginSignup/Signup";
 import Search from "../search/searchBar";
-import ViewProfile from "../profile/ViewProfileCard";
+import ViewProfile from "../profile/ViewProfileForm";
 import { useLocation } from "react-router-dom";
 import Matches from "./matches";
 const SignupPagePlaceholder = () => 
@@ -93,6 +93,12 @@ export default function AppRoot() {
         </Route>
         <Route element={renderProtection(2)}>
           <Route exact path="/search" element={<SearchPagePlaceholder />} />
+          <Route 
+            exact 
+            path="/matches" 
+            element={<Matches uid={uid} />} 
+          />
+          <Route exact path="/viewprofile" element={<ViewProfilePagePlaceholder />} />
           <Route 
             exact 
             path="/matches" 
