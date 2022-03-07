@@ -7,12 +7,8 @@ import { getProfilePicUrl } from "../../utils/storage"
 import useAuthLevel from "../app/useAuthLevel";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./searchBar.css"
-//FIX: when typing in search bar the paging gets messed up
 //FIX: split into multiple files
-//FIX: shouldDisplay doesn't latch, resets on refresh.
-//FIX: The paging generally speaking is whack
-//TODO: Make Search Bar Nicer
-//NOTE: Don't be a dummy like me and run the script repeatedly. You will use up the firebase storage limit for the day fetching images repeatedly.
+//TODO: Need a clean up fucntion in the useEffect, memory leak
 export default function Search() {
     const [sugarUsers, setUsers] = useState([]);
     const [matchesList, setMatches] = useState([]);
@@ -241,6 +237,7 @@ export default function Search() {
 
     useEffect(() => {
         getUserInfo();
+        console.log(window.location)
     }, []);
     let myDisplay = <UserList sugarUsers={sugarUsers} searchTerm={searchTerm} />
     if (searchTerm === "") {
