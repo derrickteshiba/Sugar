@@ -98,6 +98,12 @@ export default function AppRoot() {
             path="/matches" 
             element={<Matches uid={uid} />} 
           />
+          <Route exact path="/viewprofile" element={<ViewProfilePagePlaceholder />} />
+          <Route 
+            exact 
+            path="/matches" 
+            element={<Matches uid={uid} />} 
+          />
           <Route
             exact
             path="/profile"

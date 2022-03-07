@@ -5,16 +5,7 @@ import { getProfilePicUrl } from "../../utils/storage"
 import buildProfileSchema from "./buildProfileSchema"
 import { Form, Image, InputGroup, Row, Col } from "react-bootstrap"
 import styled from "styled-components"
-
-
-function handleClickAccept(id, uid)
-{
-
-}
-function handleClickReject(id, uid)
-{
-
-}
+import writeMatch from "../DatabaseSearch/WriteMatches"
 
 const Button = styled.button`
   color: white;
@@ -83,7 +74,7 @@ export default function ViewProfileCard({uid}) {
         <Row>
             <div 
             className="card mb-2" 
-            class="col-sm-12 my-auto"
+            className="col-sm-12 my-auto"
             style={{minHeight: "50px"}}>
                 <div className="text-center" style={{ padding: "10px 20px", textAlign: "center", color: "black"}}>
                     <h1>{profile.data.name}</h1>
@@ -93,7 +84,7 @@ export default function ViewProfileCard({uid}) {
         <Row style={{border: 'none'}} >
             <div 
             className="card mb-2" 
-            class="col-sm-12 my-auto"
+            className="col-sm-12 my-auto"
             style={{minHeight: "50px"}}>
                 <div className="text-center" style={{ padding: "10px 20px", textAlign: "center", color: "black"}}>
                     <h5>
@@ -104,12 +95,12 @@ export default function ViewProfileCard({uid}) {
         </Row> 
         <Row>
             <Col  className="text-center">
-                <Button className="text-center" onClick = {handleClickAccept(uid)}>
+                <Button className="text-center" onClick = {()=>writeMatch(uid, "match")}>
                     Accept
                 </Button>
             </Col>
             <Col className="text-center">
-                <Button1  onClick = {handleClickReject(uid)}>
+                <Button1  onClick = {()=>writeMatch(uid, "reject")}>
                     Reject
                 </Button1>
             </Col>
