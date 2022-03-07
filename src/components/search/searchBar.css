@@ -2,3 +2,17 @@
     height: 15vw;
     object-fit: fill
 }
+.single-card {
+    height: 90vh
+}
+.card-img-singular {
+    height: 35vw
+}
+.border.rounded-circle {
+    height: 40vw
+}
+.user-header {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+}

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Button, Stack, Card, Container, Row, Col } from "react-bootstrap"
 import { getProfilePicUrl } from "../../utils/storage"
 import useAuthLevel from "../app/useAuthLevel";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./searchBar.css"
 //FIX: when typing in search bar the paging gets messed up
 //FIX: split into multiple files
@@ -14,56 +15,165 @@ import "./searchBar.css"
 //NOTE: Don't be a dummy like me and run the script repeatedly. You will use up the firebase storage limit for the day fetching images repeatedly.
 export default function Search() {
     const [sugarUsers, setUsers] = useState([]);
-    const [matches, setMatches] = useState([]);
+    const [matchesList, setMatches] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [page, setPage] = useState(0);
     const { user, profile } = useAuthLevel();
     const uid = user?.uid;
     const db = getDatabase();
-    function getUserInfo() {
-        var users = ref(db, 'user');
-        return onValue(users, (snapshot) => {
-            const newUsers = [];
-            snapshot.forEach((snap) => {
-                const userVal= snap.val();
-                const userId = snap.key;
-                const userObject = {
-                    "name" : userVal.name,
-                    "userId" : userId,
-                    "bio" : userVal.bio,
-                    "shouldDisplay" : true
-                };
-                newUsers.push(userObject);
-            });
-            setUsers(newUsers);
-        });
+    function User(props) {
+        if (!props.toDisp) {
+            return <div>
+                No More Users
+            </div>
+        }
+        return <Card className="single-card" border="dark">
+            <Card.Img src={getProfilePicUrl(props.toDisp?.userId)} className="card-img-singular"/>
+            <Card.Body>
+                <Card.Title className="text-center">
+                    <h2>
+                        {props.toDisp?.name}
+                    </h2>
+                </Card.Title>
+                <Row>
+                    Bio: {props.toDisp?.bio}
+                </Row>
+                <Row>
+                    Status: {props.toDisp?.status}
+                </Row>
+                <Row>
+                    Learn More: 
+                    <Col>
+                        <Link as={Link} to = "/viewprofile" state = {{uid : props.toDisp?.userId }}>
+                            Profile
+                        </Link>
+                    </Col>
+                </Row>
+                <Row>
+                    <Col xs={4}>
+                        <Button style={{ width: "100%" }} size="lg" variant="success" onClick={() => writeMatch(props.toDisp?.userId, "match")}>
+                            Match
+                        </Button> 
+                    </Col>
+                    <Col xs={4}>
+                        <Button style={{ width: "100%" }} size="lg" variant="danger" onClick={() => writeMatch(props.toDisp?.userId, "reject")}>
+                            Reject
+                        </Button>
+                    </Col>
+                    <Col xs={4}>
+                        <Button style={{ width: "100%" }} size="lg" onClick={() => window.location.reload(false)}>
+                            Next
+                        </Button> 
+                    </Col>
+                </Row>
+            </Card.Body>
+        </Card>
     }
-    function getMatches() {
-        const matches = ref(db, 'matches');
-        return onValue(matches, (snapshot) => {
-            const newMatches= [];
+    function UserList(props) {
+        return <Row xs={1} md={3} className="g-4">
+        {props.sugarUsers.filter((user) => {
+            if (props.searchTerm === "") {
+                return user;
+            } else if (user.name.toLowerCase().includes(props.searchTerm.toLowerCase())) {
+                return user;
+            }
+        }).map((user) => {
+            if(!user.shouldDisplay || !user.typeDisplay) {
+                return
+            }
+            else {
+                return <Col xs={4} key={user.userId}>
+                    <Card border="dark">
+                        <Card.Img src={getProfilePicUrl(user.userId)} className="card-img"/>
+                        <Card.Body>
+                            <Card.Title className="text-center">
+                                {user.name}
+                            </Card.Title>
+                            <Row xs="auto">
+                                <Col>
+                                    <Link as={Link} to = "/viewprofile" state = {{
+                                        uid : user.userId
+                                    }}>
+                                    Profile
+                                    </Link>
+                                </Col>
+                                <Col>
+                                    <Button variant="success" onClick={() => writeMatch(user.userId, "match")}>
+                                     Match
+                                    </Button> 
+                                </Col>
+                                <Col>
+                                    <Button variant="danger" onClick={() => writeMatch(user.userId, "reject")}>
+                                    Reject
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Card.Body>
+                    </Card>
+                </Col>
+            }
+        })}
+        </Row>
+    }
+    function getUserInfo() {
+        const matchesRef = ref(db, 'matches');
+        const userRef = ref(db, 'user');
+        const newUsers = [];
+        const newMatches = [];
+        const currentUser = getAuth().currentUser.uid
+        onValue(matchesRef, (snapshot) => {
             snapshot.forEach((snap) => {
                 const match = snap.val();
-                const matchId = match.key;
+                const matchId = snap.key;
                 const matchObject = {
                     "sender" : match.sender,
                     "reciever" : match.reciever,
-                    "status" : match.status,
+                    "status" : match.matchStatus,
                     "matchId" : matchId
                 };
                 newMatches.push(matchObject);
             });
             setMatches(newMatches);
-        });
+        })
+        onValue(userRef, (snapshot) => {
+            snapshot.forEach((snap) => {
+                let display = true
+                for(let i = 0; i < newMatches.length; i++) {
+                    if (newMatches[i].reciever === snap.key && newMatches[i].sender === currentUser) {
+                        display = false
+                    }
+                }
+                if(currentUser === snap.key) {
+                    display = false
+                }
+                const userVal = snap.val();
+                const userId = snap.key;
+                const userObject = {
+                    "name" : userVal.name,
+                    "userId" : userId,
+                    "bio" : userVal.bio,
+                    "status" : userVal.status,
+                    "shouldDisplay" : display,
+                    "typeDisplay" : true
+                }
+                newUsers.push(userObject);
+            })
+            setUsers(newUsers);
+        })
     }
-    
-    function nextPage() {
-        if(!((page + 1) * 9 > sugarUsers.length))
-            setPage(page + 1);
-    }
-    function prevPage() {
-        if(page !== 0)
-            setPage(page - 1);
+    function check(status, boxStatus) {
+        const display = (boxStatus === "true")
+        const updatedUsers = sugarUsers.map((user) => {
+            if (user.status === status) {
+                const changedUserDisplay = {
+                    ...user,
+                    "typeDisplay" : display
+                }
+                return changedUserDisplay
+            }
+            return user
+        })
+        setUsers(updatedUsers)
     }
     function writeMatch(recieverId, which) {
         const matches = ref(db, 'matches');
@@ -89,7 +199,7 @@ export default function Search() {
                 const newMatch = {
                     "sender" : uid,
                     "reciever" : recieverId,
-                    "matchStatus" : newStatus
+                    "matchStatus" : newStatus,
                 }
                 push(matches, newMatch);
             }
@@ -112,12 +222,30 @@ export default function Search() {
         if(updatedUsers)
             setUsers(updatedUsers);
     }
+    function displayRandomUser(list) {
+        if(list.length === 0) {
+            return
+        }
+        let listCount = 0;
+        const listSize = list.length;
+        let randIndex = Math.floor(Math.random()*listSize)
+        while(list[randIndex].shouldDisplay === false || list[randIndex].typeDisplay === false) {
+            randIndex = Math.floor(Math.random()*listSize)
+            listCount++;
+            if(listCount === list.length) {
+                return
+            }
+        }
+        return list[randIndex]
+    }
+
     useEffect(() => {
         getUserInfo();
-       // getMatches()
-       // changeDisplay();
     }, []);
-
+    let myDisplay = <UserList sugarUsers={sugarUsers} searchTerm={searchTerm} />
+    if (searchTerm === "") {
+        myDisplay = <User toDisp={displayRandomUser(sugarUsers)}/>
+    } 
     return (
         <div className="search">
             <Container>
@@ -127,62 +255,30 @@ export default function Search() {
                             <input type="text" placeholder="Search..." onChange={event => {setSearchTerm(event.target.value)}}/>
                         </Row>
                         <Row>
-                        <Stack direction="horizontal" gap={5}>
-                            <Button onClick={prevPage}>
-                             prevPage
-                            </Button>
-                            <Button onClick={nextPage}>
-                            nextPage
-                            </Button>
-                        </Stack>
+                            <h4>Filter Users</h4>
+                            <label>
+                                <input type="checkbox" defaultChecked={true}  onChange={event => check("papa", event.target._valueTracker.getValue())}/>
+                                Sugar Papa
+                            </label>
+                            <label>
+                                <input type="checkbox" defaultChecked={true} onChange={event => check("moma", event.target._valueTracker.getValue())}/>
+                                Sugar Moma
+                            </label>
+                            <label>
+                                <input type="checkbox" defaultChecked={true} onChange={event => check("boy", event.target._valueTracker.getValue())}/>
+                                Baby Boy
+                            </label>
+                            <label>
+                                <input type="checkbox" defaultChecked={true} onChange={event => check("girl", event.target._valueTracker.getValue())}/>
+                                Baby Girl
+                            </label>
                         </Row>
                     </Col>
                     <Col xs={9}>
-                        <h2>Welcome {profile?.name}</h2>
-                        <Row xs={1} md={3} className="g-4">
-                        {sugarUsers.filter((user) => {
-                                if (searchTerm === "") {
-                                    return user;
-                                } else if (user.name.toLowerCase().includes(searchTerm.toLowerCase())) {
-                                    return user;
-                                }
-                            }).slice(page * 9,page * 9 + 9).map((user) => {
-                                if(user.userId === uid || !user.shouldDisplay) {
-                                    return
-                                }
-                                else {
-                                    return <Col key={user.userId}>
-                                        <Card border="dark">
-                                            <Card.Img src={getProfilePicUrl(user.userId)} className="card-img"/>
-                                            <Card.Body>
-                                                <Card.Title className="text-center">
-                                                    {user.name}
-                                                </Card.Title>
-                                                <Row xs="auto">
-                                                    <Col>
-                                                        <Link as={Link} to = "/viewprofile" state = {{
-                                                            uid : user.userId
-                                                        }}>
-                                                        Profile
-                                                        </Link>
-                                                    </Col>
-                                                    <Col>
-                                                        <Button variant="success" onClick={() => writeMatch(user.userId, "match")}>
-                                                         Match
-                                                        </Button> 
-                                                    </Col>
-                                                    <Col>
-                                                    <Button variant="danger" onClick={() => writeMatch(user.userId, "reject")}>
-                                                    Reject
-                                                    </Button>
-                                                    </Col>
-                                                </Row>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
-                                }
-                            })}
-                        </Row>
+                        <h2 className="user-header"> 
+                            Welcome {profile?.name}
+                        </h2>
+                        {myDisplay}
                     </Col>
                 </Row>
             </Container>
