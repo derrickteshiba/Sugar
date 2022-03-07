@@ -35,7 +35,6 @@ export default function Search() {
                         {props.toDisp?.name}
                     </h2>
                 </Card.Title>
-                <Card.Text>
                 <Row>
                     Bio: {props.toDisp?.bio}
                 </Row>
@@ -67,7 +66,6 @@ export default function Search() {
                         </Button> 
                     </Col>
                 </Row>
-                </Card.Text>
             </Card.Body>
         </Card>
     }
