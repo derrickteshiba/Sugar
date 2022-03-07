@@ -71,7 +71,7 @@ export default function ViewProfileCard({uid}) {
   if (profile.loading) return null
 
   return (
-    <div className="card mb-2" style = {{background: "#EFE1CE"}}>
+    <div className="card mb-2" style = {{background: "#EFE1CE", height: '100vh'}}>
         <div className="card-header" className = "text-center" className="d-flex align-items-center flex-column">   
             <Image
                 src = {picRef}
