@@ -7,7 +7,6 @@ import { getProfilePicUrl } from "../../utils/storage"
 import useAuthLevel from "../app/useAuthLevel";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import "./searchBar.css"
-import { connectStorageEmulator } from "firebase/storage";
 //FIX: when typing in search bar the paging gets messed up
 //FIX: split into multiple files
 //FIX: shouldDisplay doesn't latch, resets on refresh.
@@ -34,23 +33,39 @@ export default function Search() {
                 <Card.Title className="text-center">
                     {props.toDisp?.name}
                 </Card.Title>
-                <Row xs="auto">
+                <Card.Text>
+                <Row>
+                    Bio: {props.toDisp?.bio}
+                </Row>
+                <Row>
+                    Status: {props.toDisp?.status}
+                </Row>
+                <Row>
+                    Learn More: 
                     <Col>
                         <Link as={Link} to = "/viewprofile" state = {{uid : props.toDisp?.userId }}>
                             Profile
                         </Link>
                     </Col>
-                    <Col>
-                        <Button variant="success" onClick={() => writeMatch(props.toDisp?.userId, "match")}>
+                </Row>
+                <Row>
+                    <Col xs={4}>
+                        <Button style={{ width: "100%" }} size="lg" variant="success" onClick={() => writeMatch(props.toDisp?.userId, "match")}>
                             Match
                         </Button> 
                     </Col>
-                    <Col>
-                        <Button variant="danger" onClick={() => writeMatch(props.toDisp?.userId, "reject")}>
+                    <Col xs={4}>
+                        <Button style={{ width: "100%" }} size="lg" variant="danger" onClick={() => writeMatch(props.toDisp?.userId, "reject")}>
                             Reject
                         </Button>
                     </Col>
+                    <Col xs={4}>
+                        <Button style={{ width: "100%" }} size="lg" onClick={() => window.location.reload(false)}>
+                            Next
+                        </Button> 
+                    </Col>
                 </Row>
+                </Card.Text>
             </Card.Body>
         </Card>
     }

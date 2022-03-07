@@ -8,6 +8,9 @@
 .card-img-singular {
     height: 35vw
 }
+.border.rounded-circle {
+    height: 40vw
+}
 .user-header {
     display: flex;
     text-align: center;
