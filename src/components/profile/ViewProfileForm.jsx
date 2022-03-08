@@ -66,9 +66,9 @@ export default function ViewProfileCard({uid}) {
         <div className="card-header" className = "text-center" className="d-flex align-items-center flex-column">   
             <Image
                 src = {picRef}
-                width = {250}
-                height = {250}
-                className = "border rounded-circle"
+                width = {300}
+                height = {300}
+                
             />
         </div>
         <Row>
