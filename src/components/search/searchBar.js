@@ -6,6 +6,7 @@ import { Button, Stack, Card, Container, Row, Col } from "react-bootstrap"
 import { getProfilePicUrl } from "../../utils/storage"
 import useAuthLevel from "../app/useAuthLevel";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+// import writeMatch from "../DatabaseSearch/WriteMatches"
 import "./searchBar.css"
 //FIX: make a useEffect cleanup function
 //FIX: split into multiple files
@@ -65,6 +66,7 @@ export default function Search() {
         </Card>
     }
     function UserList(props) {
+        console.log("whats good")
         return <Row xs={1} md={3} className="g-4">
         {props.sugarUsers.filter((user) => {
             if (props.searchTerm === "") {
@@ -179,14 +181,16 @@ export default function Search() {
                 {
                     write = false;
                 }
-                else if(snap.val().sender === recieverId && snap.val().reciever === uid && snap.val().matchStatus === "pending") {
-                    const match = {
-                        ...snap.val(),
-                        "matchStatus" : which
+                else if(snap.val().sender === recieverId && snap.val().reciever === uid){
+                    if(snap.val().matchStatus === "pending") {
+                        const match = {
+                            ...snap.val(),
+                            "matchStatus" : which
+                        }
+                        set(ref(db, 'matches/' + snap.key), match);
+                        changeDisplay(recieverId);
                     }
-                    set(ref(db, 'matches/' + snap.key), match);
                     write = false;
-                    changeDisplay(recieverId);
                 }
             })
             const newStatus = (which === "match") ? "pending" : "reject";
