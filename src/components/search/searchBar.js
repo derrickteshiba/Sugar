@@ -66,7 +66,6 @@ export default function Search() {
         </Card>
     }
     function UserList(props) {
-        console.log("whats good")
         return <Row xs={1} md={3} className="g-4">
         {props.sugarUsers.filter((user) => {
             if (props.searchTerm === "") {
@@ -136,7 +135,8 @@ export default function Search() {
             snapshot.forEach((snap) => {
                 let display = true
                 for(let i = 0; i < newMatches.length; i++) {
-                    if (newMatches[i].reciever === snap.key && newMatches[i].sender === currentUser) {
+                    if (newMatches[i].reciever === snap.key && newMatches[i].sender === currentUser || 
+                        newMatches[i].reciever === currentUser && newMatches[i].sender === snap.key) {
                         display = false
                     }
                 }
@@ -240,7 +240,6 @@ export default function Search() {
 
     useEffect(() => {
         getUserInfo();
-        console.log(window.location)
         return () => {
             setUsers([])
             setMatches([])

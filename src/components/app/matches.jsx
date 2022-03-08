@@ -49,8 +49,6 @@ export default function Matches({uid}) {
        getMatches()
     }, []);
 
-    console.log(matches)
-    console.log(uid)
     const pendingMatches = matches.filter(match =>(
         match.reciever === uid && match.status === "pending"
         )
@@ -63,8 +61,6 @@ export default function Matches({uid}) {
     var pendingNames = statusFilter(uid, pendingMatches);
     var acceptedNames = statusFilter(uid, acceptedMatches);
     
-    console.log("Pending: " + pendingNames);
-    console.log("Accepted: " + acceptedNames);
 
     return (
     <>

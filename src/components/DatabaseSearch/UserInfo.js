@@ -25,7 +25,8 @@ export default function getUserInfo() {
         snapshot.forEach((snap) => {
             let display = true
             for(let i = 0; i < newMatches.length; i++) {
-                if (newMatches[i].reciever === snap.key && newMatches[i].sender === currentUser) {
+                if (newMatches[i].reciever === snap.key && newMatches[i].sender === currentUser  || 
+                    newMatches[i].reciever === currentUser && newMatches[i].sender === snap.key) {
                     display = false
                 }
             }

@@ -4,7 +4,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 export default function writeMatch(recieverId, which) {
     const currentUser = getAuth().currentUser.uid;
     const db = getDatabase();
-    console.log("yo")
     const matches = ref(db, 'matches');
     var write = true;
     get(matches).then((snapshot) => {
@@ -12,7 +11,6 @@ export default function writeMatch(recieverId, which) {
             if(snap.val().sender === currentUser && snap.val().reciever === recieverId) 
             {
                 write = false;
-                console.log("hello")
             }
             else if(snap.val().sender === recieverId && snap.val().reciever === currentUser) {
                 if(snap.val().matchStatus === "pending") {
@@ -28,7 +26,6 @@ export default function writeMatch(recieverId, which) {
         })
         const newStatus = (which === "match") ? "pending" : "reject";
         if(write) {
-            console.log("hi")
             const newMatch = {
                 "sender" : currentUser,
                 "reciever" : recieverId,
