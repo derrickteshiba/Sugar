@@ -13,7 +13,6 @@ export default function Search() {
     const [sugarUsers, setUsers] = useState([]);
     const [matchesList, setMatches] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [page, setPage] = useState(0);
     const { user, profile } = useAuthLevel();
     const uid = user?.uid;
     const db = getDatabase();
@@ -238,6 +237,11 @@ export default function Search() {
     useEffect(() => {
         getUserInfo();
         console.log(window.location)
+        return () => {
+            setUsers([])
+            setMatches([])
+            setSearchTerm('')
+        }
     }, []);
     let myDisplay = <UserList sugarUsers={sugarUsers} searchTerm={searchTerm} />
     if (searchTerm === "") {
