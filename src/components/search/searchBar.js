@@ -6,10 +6,7 @@ import { Button, Stack, Card, Container, Row, Col } from "react-bootstrap"
 import { getProfilePicUrl } from "../../utils/storage"
 import useAuthLevel from "../app/useAuthLevel";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-// import writeMatch from "../DatabaseSearch/WriteMatches"
 import "./searchBar.css"
-//FIX: make a useEffect cleanup function
-//FIX: split into multiple files
 export default function Search() {
     const [sugarUsers, setUsers] = useState([]);
     const [matchesList, setMatches] = useState([]);
