@@ -119,6 +119,8 @@ export function MatchProfileAccepted( {uid} ) {
     return (
     <>
     <div className="card bg-dark mb-3">
+        <div className="mt-2">
+        </div>
         <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
@@ -143,7 +145,7 @@ export function MatchProfileAccepted( {uid} ) {
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
-        <div className="mt-3">
+        <div className="mt-2">
         </div>
     </div>
     <div className="mt-3">
