@@ -227,11 +227,13 @@ export default function Search() {
         }
         let listCount = 0;
         const listSize = list.length;
+        const indexSet = new Set();
         let randIndex = Math.floor(Math.random()*listSize)
+        indexSet.add(randIndex)
         while(list[randIndex].shouldDisplay === false || list[randIndex].typeDisplay === false) {
             randIndex = Math.floor(Math.random()*listSize)
-            listCount++;
-            if(listCount === list.length) {
+            indexSet.add(randIndex)
+            if(indexSet.size === list.length) {
                 return
             }
         }
