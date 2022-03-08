@@ -6,20 +6,19 @@ import { getProfilePicUrl } from "../../utils/storage"
 const db = getDatabase()
 
 
-function handleClickReject(id)
+function handleClickReject(id, uid)
 {
-    
+    //writeMatch(id, "reject", uid);
 }
 
-function handleClickAccept(id)
+function handleClickAccept(id, uid)
 {
-
+    //writeMatch(id, "match", uid)
 }
 
 
-export function MatchProfilePending( {uid}, {matchid} ) {
+export function MatchProfilePending( {uid} ) {
     const picRef = getProfilePicUrl(uid)
-
     const [profile, setProfile] = useState({
         data: null,
         loading: true
@@ -37,34 +36,30 @@ export function MatchProfilePending( {uid}, {matchid} ) {
         })
     }, [uid])
 
-    if (!profile.data)
-    {
-        console.log("no data")
-        return (
-            <p>ERROR: no data</p>
-        )
-    }
+    if (profile.loading) return null
 
     return (
     <>
-    <Container>
-        <Row className="text-center">
+    <div className="card bg-dark mb-2">
+        {/* <Row className="text-center"> */}
         <div>
+        <div className="card-header" className="text-center">
         <Button 
         style={{ width: '45%'}}
         variant="success" 
-        onClick = {handleClickAccept(matchid)}
+        onClick = {handleClickAccept(uid)}
         className=" text-center mt-2"
         >Accept</Button>{' '}
         <Button 
         variant="danger" 
-        onClick = {handleClickReject(matchid)}
+        onClick = {handleClickReject(uid)}
         style={{ width: '45%' }}
         className=" text-center mt-2"
         >Reject</Button>{' '}
         </div>
-        </Row>
-        <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
+        </div>
+        {/* </Row> */}
+        <Accordion className="mt-2" defaultActiveKey="0" style={{ width: '100%'}}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
                 <Row style={{ width: '100%' }}>
@@ -90,7 +85,11 @@ export function MatchProfilePending( {uid}, {matchid} ) {
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
-    </Container>
+        <div className="mt-2">
+        </div>
+    </div>
+    <div className="mt-.5">
+    </div>
      </>
   )
 }
@@ -114,17 +113,14 @@ export function MatchProfileAccepted( {uid} ) {
           })
         })
     }, [uid])
-
-    if (!profile.data)
-    {
-        console.log("no data")
-        return (
-            <p>ERROR: no data</p>
-        )
-    }
+    
+    if (profile.loading) return null
 
     return (
     <>
+    <div className="card bg-dark mb-3">
+        <div className="mt-2">
+        </div>
         <Accordion defaultActiveKey="0" style={{ width: '100%' }}>
             <Accordion.Item eventKey="1">
                 <Accordion.Header>
@@ -149,6 +145,11 @@ export function MatchProfileAccepted( {uid} ) {
                 </Accordion.Body>
             </Accordion.Item>
         </Accordion>
+        <div className="mt-2">
+        </div>
+    </div>
+    <div className="mt-3">
+    </div>
      </>
   )
 }

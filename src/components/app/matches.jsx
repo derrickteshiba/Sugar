@@ -1,47 +1,71 @@
 import React from 'react'
-import {Container, Row} from 'react-bootstrap'
+import { useState, useEffect } from 'react'
+import {Accordion, Container, Row} from 'react-bootstrap'
 import {MatchProfilePending, MatchProfileAccepted} from "./matchProfile"
+// import { getDatabase, ref as dbRef, set, get } from "firebase/database"
+import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage"
+import { getDatabase, ref, onValue, get, push, set, update } from "firebase/database";
 
-var user = "Jason"
-
-var matches = [
-    { to:"Jason", from:"Krish", status: "pending", matchID: "1"},
-    { to:"Krish", from:"Derrick", status: "pending", matchID: "2"},
-    { to:"Derrick", from:"Matthew", status: "pending", matchID: "3"},
-    { to:"Matthew", from:"Victor", status: "accepted", matchID: "4"},
-    { to:"Victor", from:"Jason", status: "accepted", matchID: "5"},
-    { to:"Jason", from:"Matthew", status: "accepted", matchID: "6"}
-];
-
-const pendingMatches = matches.filter(match =>(
-    (match.to === user || match.from === user) && match.status === "pending"
-    )
-)
-const acceptedMatches = matches.filter(match =>(
-    (match.to === user || match.from === user) && match.status === "accepted"
-    )
-)
+const db = getDatabase()
+const storage = getStorage()
 
 function statusFilter(name, Array){
     var res = [];
     for (var i=0; i < Array.length; i++) {
-        if (Array[i].to === name) {
-            res.push([Array[i].from, Array[i].matchID]);
+        if (Array[i].reciever === name) {
+            res.push([Array[i].sender, Array[i].matchID]);
         }
-        else if (Array[i].from === name) {
-            res.push([Array[i].to, Array[i].matchID]);
+        else if (Array[i].sender === name) {
+            res.push([Array[i].reciever, Array[i].matchID]);
         }
     }
     return res;
 }
 
-var pendingNames = statusFilter(user, pendingMatches);
-var acceptedNames = statusFilter(user, acceptedMatches);
-
-console.log("Pending: " + pendingNames);
-console.log("Accepted: " + acceptedNames);
 
 export default function Matches({uid}) { 
+    const [matches, setMatches] = useState([])
+
+    function getMatches() {
+        const matches = ref(db, 'matches');
+        return onValue(matches, (snapshot) => {
+            const newMatches= [];
+            snapshot.forEach((snap) => {
+                const match = snap.val();
+                const matchId = snap.key;
+                const matchObject = {
+                    "sender" : match.sender,
+                    "reciever" : match.reciever,
+                    "status" : match.matchStatus,
+                    "matchId" : matchId
+                };
+                newMatches.push(matchObject);
+            });
+            setMatches(newMatches);
+        });
+    }
+
+    useEffect(() => {
+       getMatches()
+    }, []);
+
+    console.log(matches)
+    console.log(uid)
+    const pendingMatches = matches.filter(match =>(
+        match.reciever === uid && match.status === "pending"
+        )
+    )
+    const acceptedMatches = matches.filter(match =>(
+        (match.reciever === uid || match.sender === uid) && match.status === "match"
+        )
+    )
+        
+    var pendingNames = statusFilter(uid, pendingMatches);
+    var acceptedNames = statusFilter(uid, acceptedMatches);
+    
+    console.log("Pending: " + pendingNames);
+    console.log("Accepted: " + acceptedNames);
+
     return (
     <>
         <br />  
@@ -52,18 +76,26 @@ export default function Matches({uid}) {
         </div>
         <br />
         <Container>
+        <Accordion>
+            <Accordion.Header>
             <h3>Pending:</h3>
+            </Accordion.Header>
+            <Accordion.Body>
             <Row className="justify-content-md-center">
-                <MatchProfilePending uid="bPcbMZMxzVZUIwfgGH6wKCY7qmG3" />
-                {/* {pendingNames.map(d => (<p>{d[0]}</p>))}  */}
+                {pendingNames.map(d => (<MatchProfilePending uid={d[0]} />))} 
             </Row> 
-        </Container>
-        <Container>
-            <h3>MATCHED!!!</h3>
+            </Accordion.Body>
+        </Accordion>
+        <Accordion>
+            <Accordion.Header>
+            <h3>Matches:</h3>
+            </Accordion.Header>
+            <Accordion.Body>
             <Row className="justify-content-md-center">
-                <MatchProfileAccepted uid={uid}/>
-                {/* {acceptedNames.map(d => (<p>{d[0]}</p>))}  */}
+                {acceptedNames.map(d => (<MatchProfileAccepted uid={d[0]} />))} 
             </Row> 
+            </Accordion.Body>
+        </Accordion>
         </Container>
      </>
   )
