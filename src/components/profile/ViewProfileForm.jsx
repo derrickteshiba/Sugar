@@ -95,12 +95,12 @@ export default function ViewProfileCard({uid}) {
         </Row> 
         <Row>
             <Col  className="text-center">
-                <Button className="text-center" onClick = {()=>writeMatch(uid, "match")}>
+                <Button className="text-center" onClick = {()=>{writeMatch(uid, "match"); window.location.href='/searchBar'}}>
                     Accept
                 </Button>
             </Col>
             <Col className="text-center">
-                <Button1  onClick = {()=>writeMatch(uid, "reject")}>
+                <Button1  onClick = {()=>{writeMatch(uid, "reject"); window.location.href='/searchBar'}}>
                     Reject
                 </Button1>
             </Col>
