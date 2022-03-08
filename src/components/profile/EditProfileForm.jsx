@@ -51,9 +51,9 @@ export default function EditProfileForm({
               <div className="d-flex align-items-center flex-column">
                 <Image
                   src={src ?? initialSrc}
-                  width={200}
-                  height={200}
-                  className="border rounded-circle"
+                  width={300}
+                  height={300}
+                  //className="border rounded-circle"
                 />
                 <div className="mx-3" />
                 <input
