@@ -2,18 +2,19 @@ import { getDatabase, ref as dbRef, get } from "firebase/database"
 import React, { useState, useEffect } from 'react'
 import { Accordion, Row, Col, Image, Container, Card, Button} from 'react-bootstrap'
 import { getProfilePicUrl } from "../../utils/storage"
+import writeMatch from "../DatabaseSearch/WriteMatches"
 
 const db = getDatabase()
 
 
-function handleClickReject(id, uid)
+function handleClickReject(id)
 {
-    //writeMatch(id, "reject", uid);
+    writeMatch(id, "reject");
 }
 
-function handleClickAccept(id, uid)
+function handleClickAccept(id)
 {
-    //writeMatch(id, "match", uid)
+    writeMatch(id, "match")
 }
 
 
@@ -43,20 +44,25 @@ export function MatchProfilePending( {uid} ) {
     <div className="card bg-dark mb-2">
         {/* <Row className="text-center"> */}
         <div>
+
         <div className="card-header" className="text-center">
+
         <Button 
         style={{ width: '45%'}}
         variant="success" 
-        onClick = {handleClickAccept(uid)}
+        onClick = {() => handleClickAccept(uid)}
+        // onClick = {handleClickAccept(uid)}
         className=" text-center mt-2"
         >Accept</Button>{' '}
+
         <Button 
         variant="danger" 
-        onClick = {handleClickReject(uid)}
+        onClick = {() => handleClickReject(uid)}
         style={{ width: '45%' }}
         className=" text-center mt-2"
         >Reject</Button>{' '}
         </div>
+
         </div>
         {/* </Row> */}
         <Accordion className="mt-2" defaultActiveKey="0" style={{ width: '100%'}}>
