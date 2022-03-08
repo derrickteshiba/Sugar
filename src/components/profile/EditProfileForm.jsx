@@ -111,8 +111,8 @@ export default function EditProfileForm({
                     <option value=""></option>
                     <option value="moma">Sugar Moma</option>
                     <option value="papa">Sugar Papa</option>
-                    <option value="boy">Baby boy</option>
-                    <option value="girl">Baby girl</option>
+                    <option value="boy">Sugar Baby (Male)</option>
+                    <option value="girl">Sugar Baby (Female)</option>
                   </Form.Select>
                   {fieldState.error?.message && (
                     <Form.Text>{fieldState.error?.message}</Form.Text>

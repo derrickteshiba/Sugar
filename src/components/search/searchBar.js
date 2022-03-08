@@ -272,11 +272,11 @@ export default function Search() {
                             </label>
                             <label>
                                 <input type="checkbox" defaultChecked={true} onChange={event => check("boy", event.target._valueTracker.getValue())}/>
-                                Baby Boy
+                                Sugar Baby (Male)
                             </label>
                             <label>
                                 <input type="checkbox" defaultChecked={true} onChange={event => check("girl", event.target._valueTracker.getValue())}/>
-                                Baby Girl
+                                Sugar Baby (Female)
                             </label>
                         </Row>
                     </Col>
