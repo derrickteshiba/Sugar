@@ -63,7 +63,7 @@ export default function ViewProfileCard({uid}) {
 
   return (
     <div className="card mb-2" style = {{background: "#EFE1CE", height: '100vh'}}>
-        <div className="card-header" className = "text-center" className="d-flex align-items-center flex-column">   
+        <div className = "card-header text-center d-flex align-items-center flex-column">   
             <Image
                 src = {picRef}
                 width = {300}
@@ -73,8 +73,7 @@ export default function ViewProfileCard({uid}) {
         </div>
         <Row>
             <div 
-            className="card mb-2" 
-            className="col-sm-12 my-auto"
+            className="card mb-2 col-sm-12 my-auto" 
             style={{minHeight: "50px"}}>
                 <div className="text-center" style={{ padding: "10px 20px", textAlign: "center", color: "black"}}>
                     <h1>{profile.data.name}</h1>
@@ -83,8 +82,8 @@ export default function ViewProfileCard({uid}) {
         </Row>
         <Row style={{border: 'none'}} >
             <div 
-            className="card mb-2" 
-            className="col-sm-12 my-auto"
+            className="card mb-2 col-sm-12 my-auto" 
+            // className="col-sm-12 my-auto"
             style={{minHeight: "50px"}}>
                 <div className="text-center" style={{ padding: "10px 20px", textAlign: "center", color: "black"}}>
                     <h5>
